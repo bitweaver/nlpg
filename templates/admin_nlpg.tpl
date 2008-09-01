@@ -24,6 +24,7 @@
 		{/legend}
 		{/jstab}
 
+{*
 		{jstab title="Sanitation Settings"}
 		{legend legend="Santitation Settings"}
 			<input type="hidden" name="page" value="{$page}" />
@@ -44,7 +45,7 @@
 			{/foreach}
 		{/legend}
 		{/jstab}
-{*
+
 		{jstab title="Other Settings"}
 		{legend legend="Other Settings"}
 			<input type="hidden" name="page" value="{$page}" />

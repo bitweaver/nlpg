@@ -30,7 +30,9 @@
 			{formlabel label="Visual Centre Coordinates" for="street_start_x"}
 			{forminput}
 				Easting: {$propertyInfo.x_coordinate|escape} Northing: {$propertyInfo.y_coordinate|escape}
-				&nbsp;&lt;<a href="http://www.multimap.com/maps/?map={$propertyInfo.prop_lat},{$propertyInfo.prop_lng}|17|4&loc=GB:{$propertyInfo.prop_lat}:{$propertyInfo.prop_lng}:17" title="{$propertyInfo.title}">
+				&nbsp;&lt;<a href="http://www.openstreetmap.org/index.html?mlat={$propertyInfo.prop_lat}&mlon={$propertyInfo.prop_lng}&zoom=16&layers=BOFT" title="{$propertyInfo.title}">
+					OpenStreetMap
+				</a>&gt;&nbsp;&lt;<a href="http://www.multimap.com/maps/?map={$propertyInfo.prop_lat},{$propertyInfo.prop_lng}|17|4&loc=GB:{$propertyInfo.prop_lat}:{$propertyInfo.prop_lng}:17" title="{$propertyInfo.title}">
 					Multimap
 				</a>&gt;<br />
 				{$propertyInfo.rpa|escape}
@@ -57,6 +59,8 @@
 				Postcode - {$propertyInfo.lpi.ENG.postcode|escape}<br />
 			{/forminput}
 		</div>
+	</div>
+	<div class="content">
 		<div class="row">
 			{formlabel label="Cross reference" for="xref"}
 			{forminput}
@@ -99,6 +103,8 @@
 			</table>
 			{/forminput}
 		</div>
+	</div>
+	<div class="content">
 		<div class="row">
 			{formlabel label="Cross reference" for="ci"}
 			{forminput}

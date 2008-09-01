@@ -443,11 +443,11 @@ $gBitInstaller->registerSchemaDefault( NLPG_PKG_NAME, array(
 );
 
 // ### Default UserPermissions
-$gBitInstaller->registerUserPermissions( EVENTS_PKG_NAME, array(
+$gBitInstaller->registerUserPermissions( NLPG_PKG_NAME, array(
 	array( 'p_nlpg_admin', 'Can admin events', 'admin', NLPG_PKG_NAME ),
-	array( 'p_nlpg_create', 'Can create events', 'registered', NLPG_PKG_NAME ),
+	array( 'p_nlpg_create', 'Can create events', 'editors', NLPG_PKG_NAME ),
 	array( 'p_nlpg_edit', 'Can edit any events', 'editors', NLPG_PKG_NAME ),
-	array( 'p_nlpg_view', 'Can read events', 'basic',  NLPG_PKG_NAME ),
+	array( 'p_nlpg_view', 'Can read events', 'registered',  NLPG_PKG_NAME ),
 	array( 'p_nlpg_remove', 'Can delete any events', 'admin',  NLPG_PKG_NAME ),
 ) );
 
@@ -455,7 +455,6 @@ $gBitInstaller->registerUserPermissions( EVENTS_PKG_NAME, array(
 $gBitInstaller->registerPreferences( NLPG_PKG_NAME, array(
 	array( NLPG_PKG_NAME, 'nlpg_default_ordering', 'nlpg_usrn_desc' ),
 	array( NLPG_PKG_NAME, 'nlpg_version', '7.3'),
-	//array( NLPG_PKG_NAME, 'events_moderation', 'n'),
-	//array( NLPG_PKG_NAME, 'nlpg_use_24', 'n' ),
+	array( NLPG_PKG_NAME, 'nlpg_mapliks', 'y'),
 ) );
 ?>

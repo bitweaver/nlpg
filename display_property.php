@@ -1,6 +1,6 @@
 <?php
 /**
- * $Header: /cvsroot/bitweaver/_bit_nlpg/display_property.php,v 1.1 2008/08/27 16:26:17 lsces Exp $
+ * $Header: /cvsroot/bitweaver/_bit_nlpg/display_property.php,v 1.2 2008/09/01 12:32:16 lsces Exp $
  *
  * Copyright (c) 2006 bitweaver.org
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
@@ -21,7 +21,7 @@ include_once( NLPG_PKG_PATH.'NlpgProperty.php' );
 $gBitSystem->isPackageActive('nlpg', TRUE);
 
 // Now check permissions to access this page
-$gBitSystem->verifyPermission('p_nlpg_edit' );
+$gBitSystem->verifyPermission('p_nlpg_view' );
 
 if( !empty( $_REQUEST['uprn'] ) ) {
 	$gProperty = new NlpgProperty($_REQUEST['uprn']);

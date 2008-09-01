@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_nlpg/list_properties.php,v 1.1 2008/08/27 16:26:17 lsces Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_nlpg/list_properties.php,v 1.2 2008/09/01 12:32:16 lsces Exp $
  * Copyright (c) 2004 bitweaver nlpg
  * @package nlpg
  * @subpackage functions
@@ -13,10 +13,10 @@ require_once('../bit_setup_inc.php' );
 require_once(NLPG_PKG_PATH.'BitNlpg.php' );
 
 // Is package installed and enabled
-$gBitSystem->verifyPackage('nlpg' );
+$gBitSystem->verifyPackage( 'nlpg' );
 
 // Now check permissions to access this page
-$gBitSystem->verifyPermission('p_nlpg_edit' );
+$gBitSystem->verifyPermission( 'p_nlpg_view' );
 
 $nlpg = new BitNlpg();
 $listHash = $_REQUEST;

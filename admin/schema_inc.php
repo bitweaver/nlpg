@@ -446,7 +446,7 @@ $gBitInstaller->registerSchemaDefault( NLPG_PKG_NAME, array(
 $gBitInstaller->registerUserPermissions( NLPG_PKG_NAME, array(
 	array( 'p_nlpg_admin', 'Can admin events', 'admin', NLPG_PKG_NAME ),
 	array( 'p_nlpg_create', 'Can create events', 'editors', NLPG_PKG_NAME ),
-	array( 'p_nlpg_edit', 'Can edit any events', 'editors', NLPG_PKG_NAME ),
+	array( 'p_nlpg_update', 'Can update any events', 'editors', NLPG_PKG_NAME ),
 	array( 'p_nlpg_view', 'Can read events', 'registered',  NLPG_PKG_NAME ),
 	array( 'p_nlpg_remove', 'Can delete any events', 'admin',  NLPG_PKG_NAME ),
 ) );

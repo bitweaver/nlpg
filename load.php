@@ -18,6 +18,9 @@ $gBitSystem->verifyPermission('p_nlpg_admin' );
 
 $nlpg = new BitNlpg();
 //$listnlpg = $nlpg->getList( $_REQUEST );
+set_time_limit(0);
+
+$nlpg->NlpgExpunge();
 
 $row = 1;
 $no11 = 0;
@@ -30,7 +33,7 @@ $no24 = 0;
 $no25 = 0;
 $no26 = 0;
 $no27 = 0;
-$handle = fopen("data/DTFFull_1430_01.csv", "r");
+$handle = fopen("data/Full.csv", "r");
 while (($data = fgetcsv($handle, 4000, ",")) !== FALSE) {
     $num = count($data);
     $row++;

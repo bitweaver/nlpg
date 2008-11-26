@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_nlpg/BitNlpg.php,v 1.3 2008/11/26 08:28:06 lsces Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_nlpg/BitNlpg.php,v 1.4 2008/11/26 12:03:05 lsces Exp $
  *
  * Class for processing nlpg extract data.
  *
@@ -654,6 +654,29 @@ class BitNlpg extends LibertyContent {
 			$result = $this->mDb->associateUpdate( $table, $pDataHash['data_store'], array( 'usrn' => $pDataHash['usrn'] ) );
 		}
 	}
+
+	/**
+	 * NlpgExpunge();
+	 * Clear nlpg entries 
+	 * Used before loading a new full extract
+	 */
+	function NlpgExpunge() {
+		$query = "DELETE FROM `".BIT_DB_PREFIX."nlpg_street`";
+		$result = $this->mDb->query( $query );
+		$query = "DELETE FROM `".BIT_DB_PREFIX."nlpg_street_xref`";
+		$result = $this->mDb->query( $query );
+		$query = "DELETE FROM `".BIT_DB_PREFIX."nlpg_street_descriptor`";
+		$result = $this->mDb->query( $query );
+		$query = "DELETE FROM `".BIT_DB_PREFIX."nlpg_blpu`";
+		$result = $this->mDb->query( $query );
+		$query = "DELETE FROM `".BIT_DB_PREFIX."nlpg_blpu_provenance`";
+		$result = $this->mDb->query( $query );
+		$query = "DELETE FROM `".BIT_DB_PREFIX."nlpg_blpu_xref`";
+		$result = $this->mDb->query( $query );
+		$query = "DELETE FROM `".BIT_DB_PREFIX."nlpg_lpi`";
+		$result = $this->mDb->query( $query );
+	}
+
 	/**
 	 * OnsLARecordLoad( $data );
 	 * Office of national statistics Local Authority csv record 
@@ -699,6 +722,7 @@ class BitNlpg extends LibertyContent {
 	 * Adds counties for Wales, Scotland and Northern Ireland 
 	 */
 	function OnsRecordsFix() {
+		// Break up municipal areas to separate ID codes
 		$fix = "UPDATE `".BIT_DB_PREFIX."nlpg_ons_local_authority` SET C_ID = '01' WHERE L_ID BETWEEN '00AA' AND '00BK'" ;
 		$result = $this->mDb->query( $fix );
 		$fix = "UPDATE `".BIT_DB_PREFIX."nlpg_ons_local_authority` SET C_ID = '02' WHERE L_ID BETWEEN '00BL' AND '00BW'" ;
@@ -713,13 +737,14 @@ class BitNlpg extends LibertyContent {
 		$result = $this->mDb->query( $fix );
 		$fix = "UPDATE `".BIT_DB_PREFIX."nlpg_ons_local_authority` SET C_ID = '07' WHERE L_ID BETWEEN '00CX' AND '00DB'" ;
 		$result = $this->mDb->query( $fix );
-		$fix = "UPDATE `".BIT_DB_PREFIX."nlpg_ons_local_authority` SET C_ID = '98' WHERE L_ID STARTING '00N' OR WHERE L_ID STARTING '00P'" ;
+		$fix = "UPDATE `".BIT_DB_PREFIX."nlpg_ons_local_authority` SET C_ID = '98' WHERE L_ID STARTING '00N' OR L_ID STARTING '00P'" ;
 		$result = $this->mDb->query( $fix );
-		$fix = "UPDATE `".BIT_DB_PREFIX."nlpg_ons_local_authority` SET C_ID = '99' WHERE L_ID STARTING '00Q' OR WHERE L_ID STARTING '00R'" ;
+		$fix = "UPDATE `".BIT_DB_PREFIX."nlpg_ons_local_authority` SET C_ID = '99' WHERE L_ID STARTING '00Q' OR L_ID STARTING '00R'" ;
 		$result = $this->mDb->query( $fix );
-		$fix = "UPDATE `".BIT_DB_PREFIX."nlpg_ons_ward` w SET C_ID = ( SELECT `C_ID` FROM `".BIT_DB_PREFIX."nlpg_ons_local_authority` WHERE `L_ID` = w.`L_ID` )" ;
+		// Copy new  municipal areas ID's back to ward and parish tables
+		$fix = "UPDATE `".BIT_DB_PREFIX."nlpg_ons_ward` w SET C_ID = COALESCE( ( SELECT `C_ID` FROM `".BIT_DB_PREFIX."nlpg_ons_local_authority` WHERE `L_ID` = w.`L_ID` ), '--')" ;
 		$result = $this->mDb->query( $fix );
-		$fix = "UPDATE `".BIT_DB_PREFIX."nlpg_ons_parish` p SET C_ID = ( SELECT `C_ID` FROM `".BIT_DB_PREFIX."nlpg_ons_local_authority` WHERE `L_ID` = p.`L_ID` )" ;
+		$fix = "UPDATE `".BIT_DB_PREFIX."nlpg_ons_parish` p SET C_ID = COALESCE( ( SELECT `C_ID` FROM `".BIT_DB_PREFIX."nlpg_ons_local_authority` WHERE `L_ID` = p.`L_ID` ), '--')" ;
 		$result = $this->mDb->query( $fix );
 	}
 	

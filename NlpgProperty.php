@@ -9,7 +9,7 @@
 // +----------------------------------------------------------------------+
 // | This source file is subject to version 2.0 of the GPL license        |
 // +----------------------------------------------------------------------+
-//  $Id: NlpgProperty.php,v 1.1 2008/08/27 16:26:17 lsces Exp $
+//  $Id: NlpgProperty.php,v 1.2 2008/11/26 12:03:05 lsces Exp $
 
 require_once(NLPG_PKG_PATH.'lib/phpcoord-2.3.php' );
 
@@ -67,7 +67,7 @@ class NlpgProperty extends BitBase {
 						$this->mInfo['lpi'][$res['language']] = $res;
 					}
 					$sql = "SELECT * 
-						FROM `".BIT_DB_PREFIX."contact` ci  WHERE ci.`nlpg`=? ORDER BY `surname`, `forename`";
+						FROM `".BIT_DB_PREFIX."citizen` ci  WHERE ci.`nlpg`=? ORDER BY `surname`, `forename`";
 					$result = $this->mDb->query( $sql, array( $this->mUprn ) );
 					while( $res = $result->fetchRow() ) {
 						$this->mInfo['ci'][] = $res;

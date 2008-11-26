@@ -444,11 +444,11 @@ $gBitInstaller->registerSchemaDefault( NLPG_PKG_NAME, array(
 
 // ### Default UserPermissions
 $gBitInstaller->registerUserPermissions( NLPG_PKG_NAME, array(
-	array( 'p_nlpg_admin', 'Can admin events', 'admin', NLPG_PKG_NAME ),
-	array( 'p_nlpg_create', 'Can create events', 'editors', NLPG_PKG_NAME ),
-	array( 'p_nlpg_update', 'Can update any events', 'editors', NLPG_PKG_NAME ),
-	array( 'p_nlpg_view', 'Can read events', 'registered',  NLPG_PKG_NAME ),
-	array( 'p_nlpg_remove', 'Can delete any events', 'admin',  NLPG_PKG_NAME ),
+	array( 'p_nlpg_admin', 'Can admin nlpg configuration', 'admin', NLPG_PKG_NAME ),
+	array( 'p_nlpg_create', 'Can create nlpg entries', 'editors', NLPG_PKG_NAME ),
+	array( 'p_nlpg_update', 'Can update any nlpg entry', 'editors', NLPG_PKG_NAME ),
+	array( 'p_nlpg_view', 'Can read nlpg database', 'registered',  NLPG_PKG_NAME ),
+	array( 'p_nlpg_expunge', 'Can delete any nlpg entry', 'admin',  NLPG_PKG_NAME ),
 ) );
 
 // ### Default Preferences

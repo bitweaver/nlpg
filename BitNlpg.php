@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_nlpg/BitNlpg.php,v 1.2 2008/10/20 21:40:10 spiderr Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_nlpg/BitNlpg.php,v 1.3 2008/11/26 08:28:06 lsces Exp $
  *
  * Class for processing nlpg extract data.
  *
@@ -55,6 +55,7 @@ class BitNlpg extends LibertyContent {
 
 		// Permission setup
 		$this->mViewContentPerm  = 'p_nlpg_view';
+		$this->mCreateContentPerm  = 'p_nlpg_create';
 		$this->mUpdateContentPerm  = 'p_nlpg_update';
 		$this->mAdminContentPerm = 'p_nlpg_admin';
 	}

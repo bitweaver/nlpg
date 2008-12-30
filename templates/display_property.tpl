@@ -122,7 +122,7 @@
 						<tr class="{cycle values="even,odd"}" title="{$list[county].title|escape}">
 							<td>
 								<span class="actionicon">
-									{smartlink ititle="View" ifile="../contacts/display_contact.php" ibiticon="icons/accessories-text-editor" 
+									{smartlink ititle="View" ifile="../../..`$smarty.const.CITIZEN_PKG_URL`display_citizen.php" ibiticon="icons/accessories-text-editor" 
 									content_id=$propertyInfo.ci[ci].content_id}
 								</span>
 								{$propertyInfo.ci[ci].usn|escape}

@@ -6,11 +6,11 @@
  * Purpose: To provide the main entry point in accessing an NLPG repository entry
  *
  * Ported to bitweaver framework by Lester Caine 2006-12-29
- * @version $Id: index.php,v 1.2 2008/08/27 16:23:38 lsces Exp $
+ * @version $Id: index.php,v 1.3 2010/02/08 21:27:24 wjames5 Exp $
  */
 
 // Initialization
-require_once( '../bit_setup_inc.php' );
+require_once( '../kernel/setup_inc.php' );
 
 if( !empty( $_REQUEST['usrn'] ) ) {
 	header( "location: ".NLPG_PKG_URL."display_street.php?usrn=".( ( int )$_REQUEST['usrn'] ) );

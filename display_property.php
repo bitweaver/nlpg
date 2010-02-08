@@ -1,6 +1,6 @@
 <?php
 /**
- * $Header: /cvsroot/bitweaver/_bit_nlpg/display_property.php,v 1.4 2009/10/01 14:17:02 wjames5 Exp $
+ * $Header: /cvsroot/bitweaver/_bit_nlpg/display_property.php,v 1.5 2010/02/08 21:27:24 wjames5 Exp $
  *
  * Copyright (c) 2006 bitweaver.org
  * All Rights Reserved. See below for details and a complete list of authors.
@@ -13,7 +13,7 @@
 /**
  * required setup
  */
-require_once( '../bit_setup_inc.php' );
+require_once( '../kernel/setup_inc.php' );
 
 include_once( NLPG_PKG_PATH.'BitNlpg.php' );
 include_once( NLPG_PKG_PATH.'NlpgProperty.php' );

@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_nlpg/list_county.php,v 1.1 2008/08/27 16:26:17 lsces Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_nlpg/list_county.php,v 1.2 2010/02/08 21:27:24 wjames5 Exp $
  * Copyright (c) 2004 bitweaver nlpg
  * @package nlpg
  * @subpackage functions
@@ -9,7 +9,7 @@
 /**
  * required setup
  */
-require_once('../bit_setup_inc.php' );
+require_once('../kernel/setup_inc.php' );
 require_once(NLPG_PKG_PATH.'BitNlpg.php' );
 
 // Is package installed and enabled

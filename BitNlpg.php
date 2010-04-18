@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_nlpg/BitNlpg.php,v 1.4 2008/11/26 12:03:05 lsces Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_nlpg/BitNlpg.php,v 1.5 2010/04/18 02:27:24 wjames5 Exp $
  *
  * Class for processing nlpg extract data.
  *
@@ -46,7 +46,7 @@ class BitNlpg extends LibertyContent {
 		$this->mContentTypeGuid = BITNLPG_CONTENT_TYPE_GUID;
 		$this->registerContentType( BITNLPG_CONTENT_TYPE_GUID, array(
 			'content_type_guid' => BITNLPG_CONTENT_TYPE_GUID,
-			'content_description' => 'Nlpg',
+			'content_name' => 'Nlpg',
 			'handler_class' => 'BitNlpg',
 			'handler_package' => 'nlpg',
 			'handler_file' => 'BitNlpg.php',

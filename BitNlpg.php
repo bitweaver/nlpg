@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_nlpg/BitNlpg.php,v 1.5 2010/04/18 02:27:24 wjames5 Exp $
+ * @version $Header$
  *
  * Class for processing nlpg extract data.
  *

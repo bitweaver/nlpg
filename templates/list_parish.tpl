@@ -1,4 +1,4 @@
-{* $Header: /cvsroot/bitweaver/_bit_nlpg/templates/list_parish.tpl,v 1.1 2008/08/27 16:26:16 lsces Exp $ *}
+{* $Header$ *}
 
 {strip}
 

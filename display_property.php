@@ -1,6 +1,6 @@
 <?php
 /**
- * $Header: /cvsroot/bitweaver/_bit_nlpg/display_property.php,v 1.5 2010/02/08 21:27:24 wjames5 Exp $
+ * $Header$
  *
  * Copyright (c) 2006 bitweaver.org
  * All Rights Reserved. See below for details and a complete list of authors.

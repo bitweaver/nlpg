@@ -6,7 +6,7 @@
  * Purpose: To provide the main entry point in accessing an NLPG repository entry
  *
  * Ported to bitweaver framework by Lester Caine 2006-12-29
- * @version $Id: index.php,v 1.3 2010/02/08 21:27:24 wjames5 Exp $
+ * @version $Id$
  */
 
 // Initialization

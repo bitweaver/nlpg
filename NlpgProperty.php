@@ -9,7 +9,7 @@
 // +----------------------------------------------------------------------+
 // | This source file is subject to version 2.0 of the GPL license        |
 // +----------------------------------------------------------------------+
-//  $Id: NlpgProperty.php,v 1.2 2008/11/26 12:03:05 lsces Exp $
+//  $Id$
 
 require_once(NLPG_PKG_PATH.'lib/phpcoord-2.3.php' );
 

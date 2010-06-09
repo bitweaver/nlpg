@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_nlpg/admin/admin_nlpg_inc.php,v 1.2 2008/09/01 12:36:25 lsces Exp $
+ * @version $Header$
  *
  * @author lsces
  * @package nlpg

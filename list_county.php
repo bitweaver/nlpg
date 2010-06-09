@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_nlpg/list_county.php,v 1.2 2010/02/08 21:27:24 wjames5 Exp $
+ * @version $Header$
  * Copyright (c) 2004 bitweaver nlpg
  * @package nlpg
  * @subpackage functions

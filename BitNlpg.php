@@ -42,6 +42,8 @@ class BitNlpg extends LibertyContent {
 		LibertyContent::LibertyContent();
 		$this->mUSRN = $pRecId;
 		$this->mUSRN = $pRecId;
+		$this->mInfo['USRN'] = $pRecId;
+		$this->mInfo['USRN'] = $pRecId;
 		$this->mContentId = $pContentId;
 		$this->mContentTypeGuid = BITNLPG_CONTENT_TYPE_GUID;
 		$this->registerContentType( BITNLPG_CONTENT_TYPE_GUID, array(
@@ -443,14 +445,12 @@ class BitNlpg extends LibertyContent {
 	* @param pExistsHash the hash that was returned by LibertyContent::pageExists
 	* @return the link to display the page.
 	*/
-	function getDisplayUrl( $pEventsId = NULL, $pParamHash = NULL ) {
+	function getDisplayUrlFromHash( $pParamHash = NULL ) {
 		$ret = NULL;
-		if( @$this->verifyId( $this->mUSRN ) ) {
-			$ret = NLPG_PKG_URL."index.php?usrn=".$this->mUSRN;
+		if( @$this->verifyId( $pParamHash['USRN'] ) ) {
+			$ret = NLPG_PKG_URL."index.php?usrn=".$pParamHash['USRN'];
 		} else if ( @$this->verifyId( $this->mUPRN ) ) {
-			$ret = NLPG_PKG_URL."index.php?uprn=".$this->mUPRN;
-		} else {
-			$ret = LibertyContent::getDisplayUrl( NULL, $pParamHash );
+			$ret = NLPG_PKG_URL."index.php?uprn=".$pParamHash['UPRN'];
 		}
 		return $ret;
 	}

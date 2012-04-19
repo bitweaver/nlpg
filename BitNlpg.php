@@ -445,7 +445,7 @@ class BitNlpg extends LibertyContent {
 	* @param pExistsHash the hash that was returned by LibertyContent::pageExists
 	* @return the link to display the page.
 	*/
-	function getDisplayUrlFromHash( $pParamHash = NULL ) {
+	public static function getDisplayUrlFromHash( $pParamHash = NULL ) {
 		$ret = NULL;
 		if( @$this->verifyId( $pParamHash['USRN'] ) ) {
 			$ret = NLPG_PKG_URL."index.php?usrn=".$pParamHash['USRN'];

@@ -17,7 +17,7 @@ class NlpgStreet extends BitBase {
 	var $mUsrn;
 
 	function NlpgStreet( $pUsrn ) {
-		BitBase::BitBase();
+		parent::__construct();
 		if( is_numeric( $pUsrn ) ) {
 			$this->mUsrn = $pUsrn;
 		}

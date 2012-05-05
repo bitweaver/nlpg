@@ -17,7 +17,7 @@ class NlpgProperty extends BitBase {
 	var $mUprn;
 
 	function NlpgProperty( $pUprn ) {
-		BitBase::BitBase();
+		parent::__construct();
 		if( is_numeric( $pUprn ) ) {
 			$this->mUprn = $pUprn;
 		}

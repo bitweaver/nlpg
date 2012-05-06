@@ -16,7 +16,7 @@ require_once(NLPG_PKG_PATH.'lib/phpcoord-2.3.php' );
 class NlpgProperty extends BitBase {
 	var $mUprn;
 
-	function NlpgProperty( $pUprn ) {
+	function __construct( $pUprn ) {
 		parent::__construct();
 		if( is_numeric( $pUprn ) ) {
 			$this->mUprn = $pUprn;

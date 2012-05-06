@@ -16,7 +16,7 @@ require_once(NLPG_PKG_PATH.'lib/phpcoord-2.3.php' );
 class NlpgStreet extends BitBase {
 	var $mUsrn;
 
-	function NlpgStreet( $pUsrn ) {
+	function __construct( $pUsrn ) {
 		parent::__construct();
 		if( is_numeric( $pUsrn ) ) {
 			$this->mUsrn = $pUsrn;

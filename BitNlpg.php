@@ -39,7 +39,7 @@ class BitNlpg extends LibertyContent {
 	* During initialisation, be sure to call our base constructors
 	**/
 	function BitNlpg( $pRecId=NULL, $pContentId=NULL ) {
-		LibertyContent::LibertyContent();
+		parent::__construct();
 		$this->mUSRN = $pRecId;
 		$this->mUSRN = $pRecId;
 		$this->mInfo['USRN'] = $pRecId;

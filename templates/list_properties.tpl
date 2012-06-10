@@ -31,6 +31,7 @@
 				<thead>
 					<tr>
 						<th>{smartlink ititle="UPRN" isort=uprn idefault=1 iorder=desc icontrol=$listInfo list=property}</th>
+						<th>Property Type</th>
 						<th>{smartlink ititle="Organisation" isort=organisation icontrol=$listInfo list=property}</th>
 						<th>{smartlink ititle="Sec. Title" isort=soa icontrol=$listInfo list=property}</th>
 						<th>{smartlink ititle="Title" isort=title icontrol=$listInfo list=property}</th>

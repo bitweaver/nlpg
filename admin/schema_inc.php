@@ -17,24 +17,24 @@
 
 $tables = array(
 	'nlpg_ons_county' => "
-		c_id	C(2) NOTNULL,
+		c_id	V(2) NOTNULL,
 		title	C(64) 	PRIMARY
 	",
 	'nlpg_ons_local_authority' => "
-		l_id	C(4) PRIMARY,
-		c_id	C(2) NOTNULL,
+		l_id	V(4) PRIMARY,
+		c_id	V(2) NOTNULL,
 		title	C(64) NOTNULL
 	",
 	'nlpg_ons_ward' => "
-		w_id	C(6) PRIMARY,
-		l_id	C(4) NOTNULL,
-		c_id	C(2) NOTNULL,
+		w_id	V(6) PRIMARY,
+		l_id	V(4) NOTNULL,
+		c_id	V(2) NOTNULL,
 		title	C(64) NOTNULL
 	",
 	'nlpg_ons_parish' => "
-		p_id	C(7) PRIMARY,
-		l_id	C(4) NOTNULL,
-		c_id	C(2) NOTNULL,
+		p_id	V(7) PRIMARY,
+		l_id	V(4) NOTNULL,
+		c_id	V(2) NOTNULL,
 		title	C(80) NOTNULL
 	",
 	'nlpg_street' => "
@@ -149,29 +149,29 @@ $tables = array(
 		content_id I8 PRIMARY,
 		custodian_name C(40) NOTNULL,
 		custodian_uprn I8 NOTNULL,
-		custodian_code C(4) NOTNULL,
+		custodian_code V(4) NOTNULL,
 		process_date T NOTNULL DEFAULT 'NOW',
 		volume_number I2 NOTNULL,
 		entry_date D NOTNULL,
 		time_stamp D NOTNULL,
 		dtf_version F NOTNULL,
-		file_type C(1) NOTNULL,
+		file_type V(1) NOTNULL,
 		gaz_name C(60) NOTNULL,
 		gaz_scope C(60) NOTNULL,
 		ter_of_use C(60) NOTNULL,
 		linked_data C(100),
 		gaz_owner C(60) NOTNULL,
-		ngaz_freq C(1),
+		ngaz_freq V(1),
 		co_ord_system C(40),
 		co_ord_unit C(10),
 		meta_date D,
 		class_scheme C(40),
 		gaz_date D,
-		language C(3),
+		language V(3),
 		character_set C(30),
-		last_lpi_key C(14),
-		last_prov_key C(14),
-		last_xref_key C(14),
+		last_lpi_key V(14),
+		last_prov_key V(14),
+		last_xref_key V(14),
 		last_update_date D,
 		last_time_stamp T
 	",		

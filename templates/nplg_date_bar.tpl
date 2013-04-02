@@ -8,7 +8,7 @@
 		<a href="edit_street.php?usrn={$propertyInfo.usrn}" {if $beingEdited eq 'y'}{popup_init src="`$gBitLoc.THEMES_PKG_URL`overlib.js"}{popup text="$semUser" width="-1"}{/if}>{booticon iname="icon-edit" ipackage="icons" iexplain="edit"}</a>
       {/if}
     {/if}
-    <a title="{tr}print{/tr}" href="print.php?usrn={$propertyInfo.usrn}">{biticon ipackage="icons" iname="document-print" iexplain="print"}</a>
+    <a title="{tr}print{/tr}" href="print.php?usrn={$propertyInfo.usrn}">{booticon iname="icon-print"  ipackage="icons"  iexplain="print"}</a>
       {if $gBitUser->hasPermission('p_nlpg_remove')}
         <a title="{tr}remove this street{/tr}" href="remove_street.php?usrn={$propertyInfo.usrn}">{booticon iname="icon-trash" ipackage="icons" iexplain="delete"}</a>
       {/if}

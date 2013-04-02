@@ -13,7 +13,7 @@
 	<div class="body">
 		{form class="minifind" legend="find in entries"}
 			<input type="hidden" name="sort_mode" value="{$sort_mode}" />
-			{biticon ipackage="icons" iname="edit-find" iexplain="Search"} &nbsp;
+			{booticon iname="icon-search"  ipackage="icons"  iexplain="Search"} &nbsp;
 			<label>{tr}Organisation{/tr}:&nbsp;<input size="20" type="text" name="find_org" value="{$find_org|default:$smarty.request.find_org|escape}" /></label> &nbsp;
 			<label>{tr}Building{/tr}:&nbsp;<input size="20" type="text" name="find_xao" value="{$find_xao|default:$smarty.request.find_xao|escape}" /></label> &nbsp;
 			<label>{tr}Street{/tr}:&nbsp;<input size="20" type="text" name="find_street" value="{$find_street|default:$smarty.request.find_street|escape}" /></label> &nbsp;

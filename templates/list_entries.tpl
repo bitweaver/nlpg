@@ -153,7 +153,7 @@
 						{if $gBitSystem->isFeatureActive( 'nlpg_list_status' )}
 							<td style="text-align:center;">
 								{if $listpages[changes].flag eq 'locked'}
-									{biticon ipackage="icons" iname="emblem-readonly" iexplain="locked"}
+									{booticon iname="icon-lock" ipackage="icons" iexplain="locked"}
 								{else}
 									{biticon ipackage="icons" iname="emblem-default" iexplain="unlocked"}
 								{/if}
@@ -184,7 +184,7 @@
 						{/if}
 						{if $gBitUser->hasPermission( 'p_nlpg_edit_page' )}
 							<td class="actionicon">
-								<a href="{$smarty.const.nlpg_PKG_URL}edit.php?page_id={$listpages[changes].page_id}">{biticon ipackage="icons" iname="accessories-text-editor" iexplain="edit"}</a>
+								<a href="{$smarty.const.nlpg_PKG_URL}edit.php?page_id={$listpages[changes].page_id}">{booticon iname="icon-edit" ipackage="icons" iexplain="edit"}</a>
 								{if $checkboxes_on eq 'y'}
 									<input type="checkbox" name="checked[]" value="{$listpages[changes].page_id}" />
 								{/if}

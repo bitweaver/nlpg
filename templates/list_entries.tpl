@@ -23,7 +23,7 @@
 		{form id="checkform"}
 			<div class="navbar">
 				<ul>
-					<li>{biticon ipackage="icons" iname="emblem-symbolic-link" iexplain="sort by"}</li>
+					<li>{booticon iname="icon-circle-arrow-right"  ipackage="icons"  iexplain="sort by"}</li>
 					{if $gBitSystem->isFeatureActive( 'nlpg_list_name' )}
 						<li>{smartlink ititle="Page Name" isort="title" icontrol=$listInfo}</li>
 					{/if}

@@ -51,7 +51,7 @@
 								<span class="actionicon">
 									{include file="bitpackage:liberty/services_inc.tpl" serviceLocation='list' serviceHash=$listpages[county]}
 									{if $gBitUser->hasPermission( 'p_nlpg_edit' )}
-										{smartlink ititle="Edit" ifile="edit_ons.php" ibiticon="icons/accessories-text-editor" w_id=$list[county].w_id}
+										{smartlink ititle="Edit" ifile="edit_ons.php" booticon="icon-edit" w_id=$list[county].w_id}
 									{/if}
 								</span>
 								<label for="ev_{$list[county].w_id}">	

@@ -84,7 +84,7 @@
 							</td>
 							<td>
 								<span class="actionicon">
-									{smartlink ititle="View" ifile="view_xref.php" ibiticon="icons/accessories-text-editor" 
+									{smartlink ititle="View" ifile="view_xref.php" booticon="icon-edit" 
 									source=$propertyInfo.xref[xref].source xref=$propertyInfo.xref[xref].cross_reference}
 								</span>
 								<label for="ev_{$propertyInfo.xref[xref].cross_reference}">	
@@ -122,7 +122,7 @@
 						<tr class="{cycle values="even,odd"}" title="{$list[county].title|escape}">
 							<td>
 								<span class="actionicon">
-									{smartlink ititle="View" ifile="../../..`$smarty.const.CITIZEN_PKG_URL`display_citizen.php" ibiticon="icons/accessories-text-editor" 
+									{smartlink ititle="View" ifile="../../..`$smarty.const.CITIZEN_PKG_URL`display_citizen.php" booticon="icon-edit" 
 									content_id=$propertyInfo.ci[ci].content_id}
 								</span>
 								{$propertyInfo.ci[ci].usn|escape}

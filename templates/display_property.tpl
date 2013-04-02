@@ -1,32 +1,32 @@
 <div class="body">
 	<div class="content">
 
-		<div class="row">
+		<div class="control-group">
 			{formlabel label="Status" for="state"}
 			{forminput}
 				{$propertyInfo.logical_status|escape}
 				{$propertyInfo.blpu_state|escape} {$propertyInfo.blpu_state|bit_long_date}
 			{/forminput}
 		</div>
-		<div class="row">
+		<div class="control-group">
 			{formlabel label="Propert Class" for="version"}
 			{forminput}
 				{$propertyInfo.blpu_class|escape} 
 			{/forminput}
 		</div>
-		<div class="row">
+		<div class="control-group">
 			{formlabel label="Property Created" for="street_start_date"}
 			{forminput}
 				{$propertyInfo.start_date|bit_long_date}
 			{/forminput}
 		</div>
-		<div class="row">
+		<div class="control-group">
 			{formlabel label="Property Removed" for="street_end_date"}
 			{forminput}
 				{$propertyInfo.end_date|bit_long_date}
 			{/forminput}
 		</div>
-		<div class="row">
+		<div class="control-group">
 			{formlabel label="Visual Centre Coordinates" for="street_start_x"}
 			{forminput}
 				Easting: {$propertyInfo.x_coordinate|escape} Northing: {$propertyInfo.y_coordinate|escape}
@@ -38,19 +38,19 @@
 				{$propertyInfo.rpa|escape}
 			{/forminput}
 		</div>
-		<div class="row">
+		<div class="control-group">
 			{formlabel label="Ward" for="ward_code"}
 			{forminput}
 				{$propertyInfo.ward_code} - {$propertyInfo.ward}
 			{/forminput}
 		</div>
-		<div class="row">
+		<div class="control-group">
 			{formlabel label="Parish" for="parish_code"}
 			{forminput}
 				{$propertyInfo.parish_code} - {$propertyInfo.parish}
 			{/forminput}
 		</div>
-		<div class="row">
+		<div class="control-group">
 			{formlabel label="English Descriptor" for="lpi"}
 			{forminput}
 				Primary Addressabe Object - {$propertyInfo.lpi.ENG.pao|escape}<br />
@@ -61,7 +61,7 @@
 		</div>
 	</div>
 	<div class="content">
-		<div class="row">
+		<div class="control-group">
 			{formlabel label="Cross reference" for="xref"}
 			{forminput}
 			<table>
@@ -105,7 +105,7 @@
 		</div>
 	</div>
 	<div class="content">
-		<div class="row">
+		<div class="control-group">
 			{formlabel label="Cross reference" for="ci"}
 			{forminput}
 			<table>

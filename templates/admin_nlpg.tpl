@@ -7,7 +7,7 @@
 		{legend legend="Display Settings"}
 			<input type="hidden" name="page" value="{$page}" />
 			{foreach from=$formNlpgDisplayOptions key=item item=output}
-				<div class="row">
+				<div class="control-group">
 					{formlabel label=`$output.label` for=$item}
 					{forminput}
 						{if $output.type == 'numeric'}
@@ -29,7 +29,7 @@
 		{legend legend="Santitation Settings"}
 			<input type="hidden" name="page" value="{$page}" />
 			{foreach from=$formNlpgStripOptions key=item item=output}
-				<div class="row">
+				<div class="control-group">
 					{formlabel label=`$output.label` for=$item}
 					{forminput}
 						{if $output.type == 'numeric'}
@@ -50,7 +50,7 @@
 		{legend legend="Other Settings"}
 			<input type="hidden" name="page" value="{$page}" />
 			{foreach from=$formNlpgOtherOptions key=item item=output}
-				<div class="row">
+				<div class="control-group">
 					{formlabel label=`$output.label` for=$item}
 					{forminput}
 						{if $output.type == 'numeric'}
@@ -68,7 +68,7 @@
 		{/jstab}
 *}
 	{/jstabs}
-	<div class="row submit">
+	<div class="control-group submit">
 		<input type="submit" name="nlpg_preferences" value="{tr}Change preferences{/tr}" />
 	</div>
 {/form}

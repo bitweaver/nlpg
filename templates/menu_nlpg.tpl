@@ -1,5 +1,6 @@
 {strip}
-<ul>
+<a class="dropdown-toggle" data-toggle="dropdown" href="#"> {tr}{$packageMenuTitle}{/tr} <b class="caret"></b></a>
+<ul class="{$packageMenuClass}">
 	<li><a class="item" href="{$smarty.const.NLPG_PKG_URL}list_streets.php">{booticon iname="icon-list" iexplain="List Streets" ilocation=menu}</a></li>
 {*	<li><a class="item" href="{$smarty.const.NLPG_PKG_URL}list_postcodes.php">{booticon iname="icon-list" iexplain="List Postcodes" ilocation=menu}</a></li>
 *}

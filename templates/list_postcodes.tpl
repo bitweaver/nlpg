@@ -17,7 +17,7 @@
 			<input type="hidden" name="sort_mode" value="{$control.sort_mode|escape}" />
 			<input type="hidden" name="list" value="blpu_class" />
 
-			<table class="data">
+			<table class="table data">
 				<caption>{tr}List of street records{/tr}</caption>
 				<thead>
 					<tr>

@@ -1,32 +1,32 @@
 <div class="body">
 	<div class="content">
 
-						<div class="control-group">
+						<div class="form-group">
 							{formlabel label="Status" for="state"}
 							{forminput}
 								{$streetInfo.state|escape} {$streetInfo.state_date|bit_long_date}
 								{$streetInfo.street_surface|escape} {$streetInfo.street_classification|escape}
 							{/forminput}
 						</div>
-						<div class="control-group">
+						<div class="form-group">
 							{formlabel label="Version" for="version"}
 							{forminput}
 								{$streetInfo.version|escape}
 							{/forminput}
 						</div>
-						<div class="control-group">
+						<div class="form-group">
 							{formlabel label="Street Created" for="street_start_date"}
 							{forminput}
 								{$streetInfo.street_start_date|bit_long_date}
 							{/forminput}
 						</div>
-						<div class="control-group">
+						<div class="form-group">
 							{formlabel label="Street Removed" for="street_end_date"}
 							{forminput}
 								{$streetInfo.street_end_date|bit_long_date}
 							{/forminput}
 						</div>
-						<div class="control-group">
+						<div class="form-group">
 							{formlabel label="Start Coordinates" for="street_start_x"}
 							{forminput}
 								Easting: {$streetInfo.street_start_x|escape} Northing: {$streetInfo.street_start_y|escape}
@@ -35,7 +35,7 @@
 								</a>&gt;
 							{/forminput}
 						</div>
-						<div class="control-group">
+						<div class="form-group">
 							{formlabel label="End Coordinates" for="street_end_x"}
 							{forminput}
 								Easting: {$streetInfo.street_end_x|escape} Northing: {$streetInfo.street_end_y|escape}
@@ -44,13 +44,13 @@
 								</a>&gt;
 							{/forminput}
 						</div>
-						<div class="control-group">
+						<div class="form-group">
 							{formlabel label="Coordinate Tolerance" for="street_tolerance"}
 							{forminput}
 								{$streetInfo.street_tolerance} meters
 							{/forminput}
 						</div>
-						<div class="control-group">
+						<div class="form-group">
 							{formlabel label="English Descriptor" for="descriptor"}
 							{forminput}
 								Title - {$streetInfo.descriptor.ENG.street_descriptor|escape}<br />

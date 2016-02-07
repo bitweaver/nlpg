@@ -12,7 +12,7 @@
  * required setup
  */
 require_once( LIBERTY_PKG_PATH.'LibertyContent.php' );
-require_once(NLPG_PKG_PATH.'lib/phpcoord-2.3.php' );
+require_once( UTIL_PKG_PATH.'phpcoord/phpcoord-2.3.php' );
 
 /**
  * This is used to uniquely identify the object
@@ -39,11 +39,9 @@ class BitNlpg extends LibertyContent {
 	* During initialisation, be sure to call our base constructors
 	**/
 	function BitNlpg( $pRecId=NULL, $pContentId=NULL ) {
-		parent::__construct();
+		parent::__construct( $pContentId );
 		$this->mUSRN = $pRecId;
 		$this->mUSRN = $pRecId;
-		$this->mInfo['USRN'] = $pRecId;
-		$this->mInfo['USRN'] = $pRecId;
 		$this->mContentId = $pContentId;
 		$this->mContentTypeGuid = BITNLPG_CONTENT_TYPE_GUID;
 		$this->registerContentType( BITNLPG_CONTENT_TYPE_GUID, array(
@@ -66,7 +64,7 @@ class BitNlpg extends LibertyContent {
 	* Load the data from the database
 	* @param pParamHash be sure to pass by reference in case we need to make modifcations to the hash
 	**/
-	function load() {
+	function load( $pContentId = NULL, $pPluginParams = NULL ) {
 		global $gBitSystem;
 		if( $this->verifyId( $this->mEventsId ) || $this->verifyId( $this->mContentId ) ) {
 			// LibertyContent::load()assumes you have joined already, and will not execute any sql!
@@ -105,7 +103,7 @@ class BitNlpg extends LibertyContent {
 					else {
 						$this->mInfo[$var] = 0;
 					}
-				}				
+				}
 
 				LibertyAttachable::load();
 			}
@@ -124,7 +122,7 @@ class BitNlpg extends LibertyContent {
 		$this->mInfo['data'] = $pParamHash['edit'];
 		$this->mInfo['parsed'] = $this->parseData($pParamHash['edit'], empty($pParamHash['format_guid']) ? $pParamHash['format_guid'] : $gBitSystem->getConfig('default_format'));
 
-		$this->invokeServices( 'content_preview_function' );    
+		$this->invokeServices( 'content_preview_function' );
 
 		$gBitSmarty->assign('preview', true);
 
@@ -230,14 +228,14 @@ class BitNlpg extends LibertyContent {
 
 		if( !empty( $pParamHash['start_date']) && !empty($pParamHash['start_time']) ) {
 			if (isset($pParamHash['start_time']['Meridian'])) {
-				$pParamHash['event_time'] = 
+				$pParamHash['event_time'] =
 					$this->mDate->gmmktime(($pParamHash['start_time']['Meridian'] == 'pm' ?
-							      $pParamHash['start_time']['Hour'] + 12 : 
+							      $pParamHash['start_time']['Hour'] + 12 :
 							      $pParamHash['start_time']['Hour']),
 							     $pParamHash['start_time']['Minute'],
-							     isset($pParamHash['start_time']['Second']) ? 
-							     $pParamHash['start_time']['Second'] : 0, 
-							     $pParamHash['start_date']['Month'], 
+							     isset($pParamHash['start_time']['Second']) ?
+							     $pParamHash['start_time']['Second'] : 0,
+							     $pParamHash['start_date']['Month'],
 							     $pParamHash['start_date']['Day'],
 							     $pParamHash['start_date']['Year']
 							     );
@@ -246,40 +244,40 @@ class BitNlpg extends LibertyContent {
 				$pParamHash['event_time'] =
 					$this->mDate->gmmktime($pParamHash['start_time']['Hour'],
 							     $pParamHash['start_time']['Minute'],
-							     isset($pParamHash['start_time']['Second']) ? 
-							     $pParamHash['start_time']['Second'] : 0, 
-							     $pParamHash['start_date']['Month'], 
+							     isset($pParamHash['start_time']['Second']) ?
+							     $pParamHash['start_time']['Second'] : 0,
+							     $pParamHash['start_date']['Month'],
 							     $pParamHash['start_date']['Day'],
 							     $pParamHash['start_date']['Year']
 							     );
 			}
 		}
-		
+
 		if( !empty($pParamHash['end_time']) && !empty($pParamHash['event_time']) ) {
 			if (empty($pParamHash['start_date'])) {
 				$pParamHash['start_date']['Month'] = $this->mDate->strftime("%m", $pParamHash['event_time'], true);
 				$pParamHash['start_date']['Day'] = $this->mDate->strftime("%d", $pParamHash['event_time'], true);
 				$pParamHash['start_date']['Year'] = $this->mDate->strftime("%Y", $pParamHash['event_time'], true);
 			}
-			if ((!isset($pParamHash['end_time']['Meridian']) || 
+			if ((!isset($pParamHash['end_time']['Meridian']) ||
 			     ($pParamHash['end_time']['Meridian'] == 'am' ||
 			      $pParamHash['end_time']['Meridian'] == 'pm')) &&
 			    (isset($pParamHash['end_time']['Hour']) &&
-			     is_numeric($pParamHash['end_time']['Hour'])) && 				   
-			    (!isset($pParamHash['end_time']['Minute']) || 
-			     is_numeric($pParamHash['end_time']['Minute']) && 
-			     (!isset($pParamHash['end_time']['Second']) || 
+			     is_numeric($pParamHash['end_time']['Hour'])) &&
+			    (!isset($pParamHash['end_time']['Minute']) ||
+			     is_numeric($pParamHash['end_time']['Minute']) &&
+			     (!isset($pParamHash['end_time']['Second']) ||
 			      is_numeric($pParamHash['end_time']['Second'])))) {
-				
+
 				if (isset($pParamHash['end_time']['Meridian'])) {
-					$pParamHash['events_store']['end_time'] = 
+					$pParamHash['events_store']['end_time'] =
 					  $this->mDate->gmmktime(($pParamHash['end_time']['Meridian'] == 'pm' ?
-								      $pParamHash['end_time']['Hour'] + 12 : 
+								      $pParamHash['end_time']['Hour'] + 12 :
 								      $pParamHash['end_time']['Hour']),
 								     $pParamHash['end_time']['Minute'],
-								     isset($pParamHash['end_time']['Second']) ? 
+								     isset($pParamHash['end_time']['Second']) ?
 								     $pParamHash['end_time']['Second'] : 0,
-								     $pParamHash['start_date']['Month'], 
+								     $pParamHash['start_date']['Month'],
 								     $pParamHash['start_date']['Day'],
 								     $pParamHash['start_date']['Year']
 								     );
@@ -288,13 +286,13 @@ class BitNlpg extends LibertyContent {
 					$pParamHash['events_store']['end_time'] =
 					  $this->mDate->gmmktime($pParamHash['end_time']['Hour'],
 								     $pParamHash['end_time']['Minute'],
-								     isset($pParamHash['end_time']['Second']) ? 
+								     isset($pParamHash['end_time']['Second']) ?
 								     $pParamHash['end_time']['Second'] : 0,
-								     $pParamHash['start_date']['Month'], 
+								     $pParamHash['start_date']['Month'],
 								     $pParamHash['start_date']['Day'],
 								     $pParamHash['start_date']['Year']
 								     );
-				}					       
+				}
 				$pParamHash['events_store']['end_time'] = $this->mDate->getUTCFromDisplayDate($pParamHash['events_store']['end_time']);
 			}
 		}
@@ -375,7 +373,7 @@ class BitNlpg extends LibertyContent {
 	**/
 	function getList( &$pParamHash ) {
 		global $gBitSystem, $gBitUser;
-		
+
 		if ( empty( $pParamHash['sort_mode'] ) ) {
 			if ( empty( $_REQUEST["sort_mode"] ) ) {
 				$pParamHash['sort_mode'] = 'uprn_desc';
@@ -409,12 +407,12 @@ class BitNlpg extends LibertyContent {
 			$whereSql .= " AND lc.`creator_user_id` = ? ";
 			$bindVars[] = array( $pUserId );
 		}
-		
+
 		$query = "SELECT e.*, lc.`content_id`, lc.`title`, lc.`data`, lc.`modifier_user_id` AS `modifier_user_id`, lc.`user_id` AS`creator_user_id`,
 			lc.`last_modified` AS `last_modified`, lc.`event_time` AS `event_time`, lc.`format_guid`, lcps.`pref_value` AS `show_start_time`, lcpe.`pref_value` AS `show_end_time`  $selectSql
 			$selectSql
 			FROM `".BIT_DB_PREFIX."events` e
-			INNER JOIN `".BIT_DB_PREFIX."liberty_content` lc ON( lc.`content_id` = e.`content_id` ) 
+			INNER JOIN `".BIT_DB_PREFIX."liberty_content` lc ON( lc.`content_id` = e.`content_id` )
 			LEFT JOIN `".BIT_DB_PREFIX."liberty_content_prefs` lcps ON (lc.`content_id` = lcps.`content_id` AND lcps.`pref_name` = 'show_start_time')
 			LEFT JOIN `".BIT_DB_PREFIX."liberty_content_prefs` lcpe ON (lc.`content_id` = lcpe.`content_id` AND lcpe.`pref_name` = 'show_end_time')
 			$joinSql
@@ -441,22 +439,16 @@ class BitNlpg extends LibertyContent {
 	}
 
 	/**
-	* Generates the URL to the events page
+	* Generates the URL to an nlpg link
 	* @param pExistsHash the hash that was returned by LibertyContent::pageExists
 	* @return the link to display the page.
 	*/
-	public static function getDisplayUrlFromHash( $pParamHash = NULL ) {
-		$ret = NULL;
-		if( @$this->verifyId( $pParamHash['USRN'] ) ) {
-			$ret = NLPG_PKG_URL."index.php?usrn=".$pParamHash['USRN'];
-		} else if ( @$this->verifyId( $this->mUPRN ) ) {
-			$ret = NLPG_PKG_URL."index.php?uprn=".$pParamHash['UPRN'];
-		}
-		return $ret;
+	public static function getDisplayUrlFromHash( &$pParamHash ) {
+		return static::getDisplayUrlFromHash( $pParamHash );
 	}
 
 	/* Limits content status types for users who can not enter all status */
-	function getAvailableContentStatuses() {
+	function getAvailableContentStatuses( $pUserMinimum=-100, $pUserMaximum=100 ) {
 		global $gBitSystem;
 		if ($gBitSystem->isFeatureActive('events_moderation')) {
 			return LibertyContent::getAvailableContentStatuses(-100,0);
@@ -467,17 +459,17 @@ class BitNlpg extends LibertyContent {
 	function getRenderFile() {
 		return EVENTS_PKG_PATH."display_events_inc.php";
 	}
-	
+
 	/**
 	 * Process csv records from extract
 	 */
 	/**
-	 * StreetRecordLoad( $data ); 
-	 * type 11 csv record 
+	 * StreetRecordLoad( $data );
+	 * type 11 csv record
 	 */
 	function StreetRecordLoad( &$data ) {
 		$table = BIT_DB_PREFIX."nlpg_street";
-		
+
 		$pDataHash['data_store']['usrn'] = $data[3];
 		$pDataHash['data_store']['record_type'] = $data[4];
 		$pDataHash['data_store']['swa_org_ref_naming'] = $data[5];
@@ -503,11 +495,11 @@ class BitNlpg extends LibertyContent {
 	}
 	/**
 	 * StreetRecordXrefLoad( $data );
-	 * type 12 csv record 
+	 * type 12 csv record
 	 */
 	function StreetRecordXrefLoad( &$data ) {
 		$table = BIT_DB_PREFIX."nlpg_street_xref";
-		
+
 		$pDataHash['data_store']['usrn'] = $data[3];
 		$pDataHash['data_store']['xref_type'] = $data[4];
 		$pDataHash['data_store']['usrn_version_number'] = $data[5];
@@ -521,12 +513,12 @@ class BitNlpg extends LibertyContent {
 		}
 	}
 	/**
-	 * StreetRecordLoad( $data ); 
-	 * type 15 csv record 
+	 * StreetRecordLoad( $data );
+	 * type 15 csv record
 	 */
 	function StreetRecordDescriptorLoad( &$data ) {
 		$table = BIT_DB_PREFIX."nlpg_street_descriptor";
-		
+
 		$pDataHash['data_store']['usrn'] = $data[3];
 		$pDataHash['data_store']['street_descriptor'] = $data[4];
 		$pDataHash['data_store']['locality_name'] = $data[5];
@@ -540,8 +532,8 @@ class BitNlpg extends LibertyContent {
 		}
 	}
 	/**
-	 * BlpuRecordLoad( $data ); 
-	 * type 21 csv record 
+	 * BlpuRecordLoad( $data );
+	 * type 21 csv record
 	 */
 	function BlpuRecordLoad( &$data ) {
 		$table = BIT_DB_PREFIX."nlpg_blpu";
@@ -573,8 +565,8 @@ class BitNlpg extends LibertyContent {
 		}
 	}
 	/**
-	 * BlpuProvenanceRecordLoad( $data ); 
-	 * type 23 csv record 
+	 * BlpuProvenanceRecordLoad( $data );
+	 * type 23 csv record
 	 */
 	function BlpuProvenanceRecordLoad( &$data ) {
 		$table = BIT_DB_PREFIX."nlpg_blpu_provenance";
@@ -594,12 +586,12 @@ class BitNlpg extends LibertyContent {
 		}
 	}
 	/**
-	 * BlpuXrefRecordLoad( $data ); 
-	 * type 23 csv record 
+	 * BlpuXrefRecordLoad( $data );
+	 * type 23 csv record
 	 */
 	function BlpuXrefRecordLoad( &$data ) {
 		$table = BIT_DB_PREFIX."nlpg_blpu_xref";
-		
+
 		$pDataHash['data_store']['uprn'] = $data[3];
 		$pDataHash['data_store']['xref_key'] = $data[4];
 		$pDataHash['data_store']['start_date'] = $data[5];
@@ -615,8 +607,8 @@ class BitNlpg extends LibertyContent {
 		}
 	}
 	/**
-	 * LpiRecordLoad( $data ); 
-	 * type 24 csv record 
+	 * LpiRecordLoad( $data );
+	 * type 24 csv record
 	 */
 	function LpiRecordLoad( &$data ) {
 		$table = BIT_DB_PREFIX."nlpg_lpi";
@@ -657,7 +649,7 @@ class BitNlpg extends LibertyContent {
 
 	/**
 	 * NlpgExpunge();
-	 * Clear nlpg entries 
+	 * Clear nlpg entries
 	 * Used before loading a new full extract
 	 */
 	function NlpgExpunge() {
@@ -679,11 +671,11 @@ class BitNlpg extends LibertyContent {
 
 	/**
 	 * OnsLARecordLoad( $data );
-	 * Office of national statistics Local Authority csv record 
+	 * Office of national statistics Local Authority csv record
 	 */
 	function OnsLARecordLoad( &$data ) {
 		$table = BIT_DB_PREFIX."nlpg_ons_local_authority";
-		
+
 		$pDataHash['data_store']['l_id'] = $data[0];
 		$pDataHash['data_store']['c_id'] = substr($data[0], 0, 2 );
 		$pDataHash['data_store']['title'] = $data[1];
@@ -691,11 +683,11 @@ class BitNlpg extends LibertyContent {
 	}
 	/**
 	 * OnsWardRecordLoad( $data );
-	 * Office of national statistics ward entry csv record 
+	 * Office of national statistics ward entry csv record
 	 */
 	function OnsWardRecordLoad( &$data ) {
 		$table = BIT_DB_PREFIX."nlpg_ons_ward";
-		
+
 		$pDataHash['data_store']['w_id'] = $data[0];
 		$pDataHash['data_store']['l_id'] = substr($data[0], 0, 4 );
 		$pDataHash['data_store']['c_id'] = substr($data[0], 0, 2 );
@@ -704,22 +696,22 @@ class BitNlpg extends LibertyContent {
 	}
 	/**
 	 * OnsParishRecordLoad( $data );
-	 * Office of national statistics parish entry csv record 
+	 * Office of national statistics parish entry csv record
 	 */
 	function OnsParishRecordLoad( &$data ) {
 		$table = BIT_DB_PREFIX."nlpg_ons_parish";
-		
+
 		$pDataHash['data_store']['p_id'] = $data[0];
 		$pDataHash['data_store']['l_id'] = substr($data[0], 0, 4 );
 		$pDataHash['data_store']['c_id'] = substr($data[0], 0, 2 );
 		$pDataHash['data_store']['title'] = $data[1];
 		$result = $this->mDb->associateInsert( $table, $pDataHash['data_store'] );
 	}
-	
+
 	/**
 	 * OnsRecordsFix( $data );
-	 * Hard coded fixes to place the unitary authority entries in the right 'county' 
-	 * Adds counties for Wales, Scotland and Northern Ireland 
+	 * Hard coded fixes to place the unitary authority entries in the right 'county'
+	 * Adds counties for Wales, Scotland and Northern Ireland
 	 */
 	function OnsRecordsFix() {
 		// Break up municipal areas to separate ID codes
@@ -747,10 +739,10 @@ class BitNlpg extends LibertyContent {
 		$fix = "UPDATE `".BIT_DB_PREFIX."nlpg_ons_parish` p SET C_ID = COALESCE( ( SELECT `C_ID` FROM `".BIT_DB_PREFIX."nlpg_ons_local_authority` WHERE `L_ID` = p.`L_ID` ), '--')" ;
 		$result = $this->mDb->query( $fix );
 	}
-	
+
 	/**
 	 * OnsExpunge();
-	 * Clear office of national statistics entries 
+	 * Clear office of national statistics entries
 	 */
 	function OnsExpunge() {
 		$query = "DELETE FROM `".BIT_DB_PREFIX."nlpg_ons_local_authority`";
@@ -808,11 +800,11 @@ class BitNlpg extends LibertyContent {
 
 	/**
 	 * getOsnList( &$pParamHash );
-	 * Get county list 
+	 * Get county list
 	 */
 	function getOsnList( &$pParamHash ) {
 		global $gBitSystem, $gBitUser;
-		
+
 		if ( empty( $pParamHash['sort_mode'] ) ) {
 			if ( empty( $_REQUEST["sort_mode"] ) ) {
 				$pParamHash['sort_mode'] = 'title_asc';
@@ -820,7 +812,7 @@ class BitNlpg extends LibertyContent {
 			$pParamHash['sort_mode'] = $_REQUEST['sort_mode'];
 			}
 		}
-		
+
 		LibertyContent::prepGetList( $pParamHash );
 
 		$findSql = '';
@@ -894,60 +886,60 @@ class BitNlpg extends LibertyContent {
 				$whereSql .= " WHERE UPPER( `title` )like ? ";
 				$bindVars[] = '%' . strtoupper( $find ). '%';
 			}
-		} 
+		}
 /*		} else if( @$this->verifyId( $pUserId ) ) {
 			// or a string
 			$whereSql .= " AND lc.`creator_user_id` = ? ";
 			$bindVars[] = array( $pUserId );
 		}
-*/		
+*/
 		if ( $pParamHash['list'] == 'county' ) {
-			$query = "SELECT c.* $selectSql 
+			$query = "SELECT c.* $selectSql
 				FROM `".BIT_DB_PREFIX."nlpg_ons_county` c
 				$joinSql $whereSql ORDER BY ".$this->mDb->convertSortmode( $sort_mode );
 			$query_cant = "SELECT COUNT( * )
 				FROM `".BIT_DB_PREFIX."nlpg_ons_county` c $joinSql $whereSql";
 		} else if ( $pParamHash['list'] == 'local' ) {
-			$query = "SELECT l.*, c.title AS county $selectSql 
-				FROM `".BIT_DB_PREFIX."nlpg_ons_local_authority` l 
+			$query = "SELECT l.*, c.title AS county $selectSql
+				FROM `".BIT_DB_PREFIX."nlpg_ons_local_authority` l
 				LEFT JOIN `".BIT_DB_PREFIX."nlpg_ons_county` c ON l.c_id = c.c_id AND l.c_id > 0
 				$joinSql $whereSql ORDER BY ".$this->mDb->convertSortmode( $sort_mode );
 			$query_cant = "SELECT COUNT( * )
 				FROM `".BIT_DB_PREFIX."nlpg_ons_local_authority` l $joinSql $whereSql";
 		} else if ( $pParamHash['list'] == 'ward' ) {
-			$query = "SELECT w.*, l.title AS local_authority, c.title AS county $selectSql 
-				FROM `".BIT_DB_PREFIX."nlpg_ons_ward` w 
+			$query = "SELECT w.*, l.title AS local_authority, c.title AS county $selectSql
+				FROM `".BIT_DB_PREFIX."nlpg_ons_ward` w
 				INNER JOIN `".BIT_DB_PREFIX."nlpg_ons_local_authority` l ON w.l_id = l.l_id
 				LEFT JOIN `".BIT_DB_PREFIX."nlpg_ons_county` c ON l.c_id = c.c_id AND l.c_id > 0
 				$joinSql $whereSql ORDER BY ".$this->mDb->convertSortmode( $sort_mode );
 			$query_cant = "SELECT COUNT( * )
 				FROM `".BIT_DB_PREFIX."nlpg_ons_ward` w $joinSql $whereSql";
 		} else if ( $pParamHash['list'] == 'parish' ) {
-			$query = "SELECT p.*, l.title AS local_authority, c.title AS county $selectSql 
-				FROM `".BIT_DB_PREFIX."nlpg_ons_parish` p 
+			$query = "SELECT p.*, l.title AS local_authority, c.title AS county $selectSql
+				FROM `".BIT_DB_PREFIX."nlpg_ons_parish` p
 				INNER JOIN `".BIT_DB_PREFIX."nlpg_ons_local_authority` l ON p.l_id = l.l_id
 				LEFT JOIN `".BIT_DB_PREFIX."nlpg_ons_county` c ON l.c_id = c.c_id AND l.c_id > 0
 				$joinSql $whereSql ORDER BY ".$this->mDb->convertSortmode( $sort_mode );
 			$query_cant = "SELECT COUNT( * )
 				FROM `".BIT_DB_PREFIX."nlpg_ons_parish` p $joinSql $whereSql";
 		} else if ( $pParamHash['list'] == 'blpu_class' ) {
-			$query = "SELECT c.blpu_id, c.pd, c.sd, c.td AS title $selectSql 
-				FROM `".BIT_DB_PREFIX."nlpg_blpu_class` c 
+			$query = "SELECT c.blpu_id, c.pd, c.sd, c.td AS title $selectSql
+				FROM `".BIT_DB_PREFIX."nlpg_blpu_class` c
 				$joinSql $whereSql ORDER BY ".$this->mDb->convertSortmode( $sort_mode );
 			$query_cant = "SELECT COUNT( * )
 				FROM `".BIT_DB_PREFIX."nlpg_blpu_class` c $joinSql $whereSql";
 		} else if ( $pParamHash['list'] == 'street' ) {
-			$query = "SELECT s.*, d.street_descriptor AS title, d.locality_name, d.town_name $selectSql 
-				FROM `".BIT_DB_PREFIX."nlpg_street` s 
-				INNER JOIN `".BIT_DB_PREFIX."nlpg_street_descriptor` d ON s.usrn = d.usrn AND d.language = 'ENG' $findSql 
+			$query = "SELECT s.*, d.street_descriptor AS title, d.locality_name, d.town_name $selectSql
+				FROM `".BIT_DB_PREFIX."nlpg_street` s
+				INNER JOIN `".BIT_DB_PREFIX."nlpg_street_descriptor` d ON s.usrn = d.usrn AND d.language = 'ENG' $findSql
 				$joinSql $whereSql ORDER BY ".$this->mDb->convertSortmode( $sort_mode );
 			$query_cant = "SELECT COUNT( * )
 				FROM `".BIT_DB_PREFIX."nlpg_street` s
-				INNER JOIN `".BIT_DB_PREFIX."nlpg_street_descriptor` d ON s.usrn = d.usrn AND d.language = 'ENG' $findSql 
+				INNER JOIN `".BIT_DB_PREFIX."nlpg_street_descriptor` d ON s.usrn = d.usrn AND d.language = 'ENG' $findSql
 				$joinSql $whereSql";
 		} else if ( $pParamHash['list'] == 'postcode' ) {
-			$query = "SELECT p.postcode, p.add1, p.add2 AS title, p.add3, p.add4, p.town, p.county, p.grideast, p.gridnorth $selectSql 
-				FROM `".BIT_DB_PREFIX."nlpg_postcode` p 
+			$query = "SELECT p.postcode, p.add1, p.add2 AS title, p.add3, p.add4, p.town, p.county, p.grideast, p.gridnorth $selectSql
+				FROM `".BIT_DB_PREFIX."nlpg_postcode` p
 				$joinSql $whereSql ORDER BY ".$this->mDb->convertSortmode( $sort_mode );
 			$query_cant = "SELECT COUNT( * )
 				FROM `".BIT_DB_PREFIX."nlpg_postcode` p $joinSql $whereSql";
@@ -985,14 +977,14 @@ class BitNlpg extends LibertyContent {
 		LibertyContent::postGetList( $pParamHash );
 		return $ret;
 	}
-	
+
 	/**
 	 * getPropertyList( &$pParamHash );
-	 * Get list of property records 
+	 * Get list of property records
 	 */
 	function getPropertyList( &$pParamHash ) {
 		global $gBitSystem, $gBitUser;
-		
+
 		if ( empty( $pParamHash['sort_mode'] ) ) {
 			if ( empty( $_REQUEST["sort_mode"] ) ) {
 				$pParamHash['sort_mode'] = 'title_asc';
@@ -1000,7 +992,7 @@ class BitNlpg extends LibertyContent {
 			$pParamHash['sort_mode'] = $_REQUEST['sort_mode'];
 			}
 		}
-		
+
 		LibertyContent::prepGetList( $pParamHash );
 
 		$findSql = '';
@@ -1014,7 +1006,7 @@ class BitNlpg extends LibertyContent {
 
 		$where = ' WHERE ';
 		if( isset( $find_org ) and is_string( $find_org ) and $find_org <> '' ) {
-			$findSql .= $where . "UPPER( p.`organisation` ) like ? ";
+			$findSql .= $where . "UPPER( c.`organisation` ) like ? ";
 			$bindVars[] = '%' . strtoupper( $find_org ). '%';
 			$where = ' AND ';
 		}
@@ -1025,7 +1017,7 @@ class BitNlpg extends LibertyContent {
 			$where = ' AND ';
 		}
 		if( isset( $find_street ) and is_string( $find_street ) and $find_street <> '' ) {
-			$findSql .= $where . "UPPER( s.`street_descriptor` ) like ? ";
+			$findSql .= $where . "UPPER( d.`add2` ) like ? ";
 			$bindVars[] = '%' . strtoupper( $find_street ). '%';
 			$where = ' AND ';
 		}
@@ -1036,19 +1028,19 @@ class BitNlpg extends LibertyContent {
 		}
 		// If no selected filter then reduce result set artificially - use street starting A
 		if( $where == ' WHERE ' ) {
-			$findSql .= $where . "UPPER( s.`street_descriptor` ) like ? ";
+			$findSql .= $where . "UPPER( d.`add2` ) like ? ";
 			$bindVars[] = 'A%';
 			$pParamHash['find_street'] = 'A';
 		}
-		$query = "SELECT p.*, d.sao, d.pao AS title, d.postcode, s.* $selectSql 
-			FROM `".BIT_DB_PREFIX."nlpg_blpu` p 
-			INNER JOIN `".BIT_DB_PREFIX."nlpg_lpi` d ON d.uprn = p.uprn AND d.language = 'ENG' AND d.logical_status = 1 
-			INNER JOIN `".BIT_DB_PREFIX."nlpg_street_descriptor` s ON s.usrn = d.usrn AND s.language = 'ENG' $findSql 
+		$query = "SELECT CASE WHEN c.uprn = 0 THEN 'Private' ELSE 'Business' END AS p_type, p.*, d.add2, d.add3 AS title, d.postcode, c.* $selectSql
+			FROM `".BIT_DB_PREFIX."property` p
+			INNER JOIN `".BIT_DB_PREFIX."postcode` d ON d.`postcode` = p.`postcode`
+			INNER JOIN `".BIT_DB_PREFIX."contact` c ON c.`content_id` = p.`owner_id` $findSql
 			$joinSql $whereSql ORDER BY ".$this->mDb->convertSortmode( $sort_mode );
 		$query_cant = "SELECT COUNT( * )
-			FROM `".BIT_DB_PREFIX."nlpg_blpu` p
-			INNER JOIN `".BIT_DB_PREFIX."nlpg_lpi` d ON p.uprn = d.uprn AND d.language = 'ENG' AND d.logical_status = 1  
-			INNER JOIN `".BIT_DB_PREFIX."nlpg_street_descriptor` s ON s.usrn = d.usrn AND s.language = 'ENG' $findSql 
+			FROM `".BIT_DB_PREFIX."property` p
+			INNER JOIN `".BIT_DB_PREFIX."postcode` d ON d.`postcode` = p.`postcode`
+			INNER JOIN `".BIT_DB_PREFIX."contact` c ON c.`content_id` = p.`owner_id` $findSql
 			$joinSql $whereSql";
 		$result = $this->mDb->query( $query, $bindVars, $max_records, $offset );
 		$ret = array();
@@ -1056,12 +1048,13 @@ class BitNlpg extends LibertyContent {
 			if (!empty($parse_split)) {
 				$res = array_merge($this->parseSplit($res), $res);
 			}
-			$os1 = new OSRef($res['x_coordinate'], $res['y_coordinate']);
+/*			$os1 = new OSRef($res['x_coordinate'], $res['y_coordinate']);
 			$ll1 = $os1->toLatLng();
 			$res['prop_lat'] = $ll1->lat;
 			$res['prop_lng'] = $ll1->lng;
 			$res['display_usrn'] = $this->getUsrnEntryUrl( $res['usrn'] );
 			$res['display_uprn'] = $this->getUprnEntryUrl( $res['uprn'] );
+*/
 			$ret[] = $res;
 		}
 
@@ -1070,6 +1063,6 @@ class BitNlpg extends LibertyContent {
 		LibertyContent::postGetList( $pParamHash );
 		return $ret;
 	}
-	
+
 }
 ?>

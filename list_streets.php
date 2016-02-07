@@ -28,8 +28,8 @@ if ( isset( $listHash['listInfo']['find'] ) ) {
 	$listHash['listInfo']['ihash']['find_objects'] = $listHash['listInfo']['find'];
 }
 
-$gBitSmarty->assign_by_ref('listInfo', $listHash['listInfo']);
-$gBitSmarty->assign_by_ref('list', $listnlpg);
+$gBitSmarty->assignByRef('listInfo', $listHash['listInfo']);
+$gBitSmarty->assignByRef('list', $listnlpg);
 
 // Display the template
 $gBitSystem->display('bitpackage:nlpg/list_streets.tpl', tra('Street record detail') );

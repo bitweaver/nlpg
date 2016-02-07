@@ -22,10 +22,10 @@ $nlpg = new BitNlpg();
 
 $listnlpg = $nlpg->getOsnList( $_REQUEST );
 
-$gBitSmarty->assign_by_ref('listInfo', $_REQUEST['listInfo']);
-$gBitSmarty->assign_by_ref('list', $listnlpg);
-if ( isset($_REQUEST['listInfo']) ) $gBitSmarty->assign_by_ref('l_id', $_REQUEST['l_id']);
-if ( isset($_REQUEST['listInfo']) ) $gBitSmarty->assign_by_ref('c_id', $_REQUEST['c_id']);
+$gBitSmarty->assignByRef('listInfo', $_REQUEST['listInfo']);
+$gBitSmarty->assignByRef('list', $listnlpg);
+if ( isset($_REQUEST['listInfo']) ) $gBitSmarty->assignByRef('l_id', $_REQUEST['l_id']);
+if ( isset($_REQUEST['listInfo']) ) $gBitSmarty->assignByRef('c_id', $_REQUEST['c_id']);
 
 // Display the template
 if ( $_REQUEST['list'] == 'county' ) {

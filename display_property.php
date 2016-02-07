@@ -30,7 +30,7 @@ if( !empty( $_REQUEST['uprn'] ) ) {
 	$gProperty = new NlpgProperty();
 }
 
-$gBitSmarty->assign_by_ref( 'propertyInfo', $gProperty->mInfo );
+$gBitSmarty->assignByRef( 'propertyInfo', $gProperty->mInfo );
 if ( $gProperty->isValid() ) {
 	$gBitSystem->setBrowserTitle("National Land and Property Gazetteer Item");
 	$gBitSystem->display( 'bitpackage:nlpg/show_property.tpl');

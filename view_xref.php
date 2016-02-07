@@ -15,7 +15,7 @@ require_once( '../kernel/setup_inc.php' );
 if( !empty( $_REQUEST['xref'] ) ) {
 }
 
-$gBitSmarty->assign_by_ref( 'info', $_REQUEST );
+$gBitSmarty->assignByRef( 'info', $_REQUEST );
 
 $gBitSystem->display( 'bitpackage:nlpg/view_xref.tpl', tra( 'External application link: ' ) );
 ?>

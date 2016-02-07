@@ -23,8 +23,8 @@ $_REQUEST['list'] = 'postcode';
 
 $listnlpg = $nlpg->getOsnList( $_REQUEST );
 
-$gBitSmarty->assign_by_ref('listInfo', $_REQUEST['listInfo']);
-$gBitSmarty->assign_by_ref('list', $listnlpg);
+$gBitSmarty->assignByRef('listInfo', $_REQUEST['listInfo']);
+$gBitSmarty->assignByRef('list', $listnlpg);
 
 // Display the template
 $gBitSystem->display('bitpackage:nlpg/list_postcodes.tpl', tra('Postcode record list') );

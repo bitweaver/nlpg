@@ -29,8 +29,8 @@ $listHash['listInfo']['ihash']['find_xao'] = !empty( $listHash['find_xao'] ) ? $
 $listHash['listInfo']['ihash']['find_street'] = !empty( $listHash['find_street'] ) ? $listHash['find_street'] : '';
 $listHash['listInfo']['ihash']['find_postcode'] = !empty( $listHash['find_postcode'] ) ? $listHash['find_postcode'] : '';
 
-$gBitSmarty->assign_by_ref('listInfo', $listHash['listInfo']);
-$gBitSmarty->assign_by_ref('list', $listnlpg);
+$gBitSmarty->assignByRef('listInfo', $listHash['listInfo']);
+$gBitSmarty->assignByRef('list', $listnlpg);
 
 // Display the template
 $gBitSystem->display('bitpackage:nlpg/list_properties.tpl', tra('Property record list') );

@@ -30,7 +30,7 @@ if( !empty( $_REQUEST['usrn'] ) ) {
 	$gStreet = new NlpgStreet();
 }
 
-$gBitSmarty->assign_by_ref( 'streetInfo', $gStreet->mInfo );
+$gBitSmarty->assignByRef( 'streetInfo', $gStreet->mInfo );
 if ( $gStreet->isValid() ) {
 	$gBitSystem->setBrowserTitle("National Street Gazetteer Item");
 	$gBitSystem->display( 'bitpackage:nlpg/show_street.tpl');

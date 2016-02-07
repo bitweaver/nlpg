@@ -18,7 +18,7 @@
 			<label>{tr}Building{/tr}:&nbsp;<input size="20" type="text" name="find_xao" value="{$find_xao|default:$smarty.request.find_xao|escape}" /></label> &nbsp;
 			<label>{tr}Street{/tr}:&nbsp;<input size="20" type="text" name="find_street" value="{$find_street|default:$smarty.request.find_street|escape}" /></label> &nbsp;
 			<label>{tr}Postcode{/tr}:&nbsp;<input size="10" type="text" name="find_postcode" value="{$find_postcode|default:$smarty.request.find_postcode|escape}" /></label> &nbsp;
-			<input type="submit" class="btn" name="search" value="{tr}Find{/tr}" />&nbsp;
+			<input type="submit" class="btn btn-default" name="search" value="{tr}Find{/tr}" />&nbsp;
 			<input type="button" onclick="location.href='{$smarty.server.SCRIPT_NAME}{if $hidden}?{/if}{foreach from=$hidden item=value key=name}{$name}={$value}&amp;{/foreach}'" value="{tr}Reset{/tr}" />
 		{/form}
 

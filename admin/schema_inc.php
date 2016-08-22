@@ -191,6 +191,25 @@ $tables = array(
 		td	C(64)	NOTNULL,
 		notes	X	
 	",
+	'nlpg_ukpc' => "
+		postcode C(8)	PRIMARY,
+		status V(1) NOTNULL,
+		usertype V(1) NOTNULL,
+		easting I4,
+		northing I4,
+		positional_quality_indicator I1 NOTNULL,
+		country C(16) NOTNULL,
+		latitude F,
+		longitude F,
+		postcode_no_space V(7) NOTNULL,
+		postcode_fixed_width_seven V(7) NOTNULL,
+		postcode_fixed_width_eight V(8) NOTNULL,
+		postcode_area V(2),
+		postcode_district V(4),
+		postcode_sector V(6),
+		outcode V(4) NOTNULL,
+		incode V(3) NOTNULL	
+	",
 );
 
 global $gBitInstaller;

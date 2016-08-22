@@ -84,7 +84,7 @@ class BitNlpg extends LibertyContent {
 				"uue.`login` AS modifier_user, uue.`real_name` AS modifier_real_name, " .
 				"uuc.`login` AS creator_user, uuc.`real_name` AS creator_real_name " .
 				"$selectSql " .
-				"FROM `".BIT_DB_PREFIX."nlpg` n " .
+				"FROM `".BIT_DB_PREFIX."nlpg_metadata` n " .
 				"INNER JOIN `".BIT_DB_PREFIX."liberty_content` lc ON( lc.`content_id` = n.`content_id` ) $joinSql" .
 				"LEFT JOIN `".BIT_DB_PREFIX."users_users` uue ON( uue.`user_id` = lc.`modifier_user_id` )" .
 				"LEFT JOIN `".BIT_DB_PREFIX."users_users` uuc ON( uuc.`user_id` = lc.`user_id` )" .
@@ -248,8 +248,6 @@ class BitNlpg extends LibertyContent {
 		$ret = FALSE;
 		if( $this->isValid() ) {
 			$this->mDb->StartTrans();
-			$query = "DELETE FROM `".BIT_DB_PREFIX."nlpg` WHERE `content_id` = ?";
-			$result = $this->mDb->query( $query, array( $this->mContentId ) );
 			if( LibertyContent::expunge() ) {
 				$ret = TRUE;
 				$this->mDb->CompleteTrans();
@@ -310,7 +308,7 @@ class BitNlpg extends LibertyContent {
 		$query = "SELECT n.*, lc.`content_id`, lc.`title`, lc.`data`, lc.`modifier_user_id` AS `modifier_user_id`, lc.`user_id` AS`creator_user_id`,
 			lc.`last_modified` AS `last_modified`, lc.`event_time` AS `event_time`, lc.`format_guid`, lcps.`pref_value` AS `show_start_time`, lcpe.`pref_value` AS `show_end_time`  $selectSql
 			$selectSql
-			FROM `".BIT_DB_PREFIX."nlpg` n
+			FROM `".BIT_DB_PREFIX."nlpg_metadata` n
 			INNER JOIN `".BIT_DB_PREFIX."liberty_content` lc ON( lc.`content_id` = e.`content_id` )
 			LEFT JOIN `".BIT_DB_PREFIX."liberty_content_prefs` lcps ON (lc.`content_id` = lcps.`content_id` AND lcps.`pref_name` = 'show_start_time')
 			LEFT JOIN `".BIT_DB_PREFIX."liberty_content_prefs` lcpe ON (lc.`content_id` = lcpe.`content_id` AND lcpe.`pref_name` = 'show_end_time')
@@ -318,7 +316,7 @@ class BitNlpg extends LibertyContent {
 			WHERE lc.`content_type_guid` = ? $whereSql
 			ORDER BY ".$this->mDb->convertSortmode( $sort_mode );
 		$query_cant = "SELECT COUNT( * )
-				FROM `".BIT_DB_PREFIX."nlpg` n
+				FROM `".BIT_DB_PREFIX."nlpg_metadata` n
 				INNER JOIN `".BIT_DB_PREFIX."liberty_content` lc ON( lc.`content_id` = e.`content_id` ) $joinSql
 				WHERE lc.`content_type_guid` = ? $whereSql";
 		$result = $this->mDb->query( $query, $bindVars, $max_records, $offset );

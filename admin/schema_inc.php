@@ -147,6 +147,7 @@ $tables = array(
 	",		
 	'nlpg_metadata' => "
 		content_id I8 PRIMARY,
+		nlpg_id I8 NOTNULL
 		custodian_name C(40) NOTNULL,
 		custodian_uprn I8 NOTNULL,
 		custodian_code V(4) NOTNULL,

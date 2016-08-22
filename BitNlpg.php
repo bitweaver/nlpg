@@ -12,7 +12,7 @@
  * required setup
  */
 require_once( LIBERTY_PKG_PATH.'LibertyContent.php' );
-require_once( UTIL_PKG_PATH.'phpcoord/phpcoord-2.3.php' );
+require_once( CONTACT_PKG_PATH.'lib/phpcoord-2.3.php' );
 
 /**
  * This is used to uniquely identify the object
@@ -23,6 +23,12 @@ define( 'BITNLPG_CONTENT_TYPE_GUID', 'bitnlpg' );
  * @package nlpg
  */
 class BitNlpg extends LibertyContent {
+	/**
+	* Primary key for upload record
+	* @public
+	*/
+	var $mNlpgId;
+
 	/**
 	* Primary key for street identification
 	* @public
@@ -41,7 +47,7 @@ class BitNlpg extends LibertyContent {
 	function BitNlpg( $pRecId=NULL, $pContentId=NULL ) {
 		parent::__construct( $pContentId );
 		$this->mUSRN = $pRecId;
-		$this->mUSRN = $pRecId;
+		$this->mUPRN = $pRecId;
 		$this->mContentId = $pContentId;
 		$this->mContentTypeGuid = BITNLPG_CONTENT_TYPE_GUID;
 		$this->registerContentType( BITNLPG_CONTENT_TYPE_GUID, array(
@@ -66,15 +72,15 @@ class BitNlpg extends LibertyContent {
 	**/
 	function load( $pContentId = NULL, $pPluginParams = NULL ) {
 		global $gBitSystem;
-		if( $this->verifyId( $this->mEventsId ) || $this->verifyId( $this->mContentId ) ) {
+		if( $this->verifyId( $this->mNlpgId ) || $this->verifyId( $this->mContentId ) ) {
 			// LibertyContent::load()assumes you have joined already, and will not execute any sql!
 			// This is a significant performance optimization
-			$lookupColumn = $this->verifyId( $this->mEventsId ) ? 'events_id' : 'content_id';
+			$lookupColumn = $this->verifyId( $this->mNlpgId ) ? 'nlpg_id' : 'content_id';
 			$bindVars = array(); $selectSql = ''; $joinSql = ''; $whereSql = '';
-			array_push( $bindVars, $lookupId = @BitBase::verifyId( $this->mEventsId )? $this->mEventsId : $this->mContentId );
+			array_push( $bindVars, $lookupId = @BitBase::verifyId( $this->mNlpgId )? $this->mNlpgId : $this->mContentId );
 			$this->getServicesSql( 'content_load_sql_function', $selectSql, $joinSql, $whereSql, $bindVars );
 
-			$query = "SELECT e.*, lc.*, " .
+			$query = "SELECT n.*, lc.*, " .
 				"uue.`login` AS modifier_user, uue.`real_name` AS modifier_real_name, " .
 				"uuc.`login` AS creator_user, uuc.`real_name` AS creator_real_name " .
 				"$selectSql " .
@@ -83,12 +89,12 @@ class BitNlpg extends LibertyContent {
 				"LEFT JOIN `".BIT_DB_PREFIX."users_users` uue ON( uue.`user_id` = lc.`modifier_user_id` )" .
 				"LEFT JOIN `".BIT_DB_PREFIX."users_users` uuc ON( uuc.`user_id` = lc.`user_id` )" .
 				"WHERE e.`$lookupColumn`=? $whereSql";
-			$result = $this->mDb->query( $query, $bindVars );
+			$result = false; // $this->mDb->query( $query, $bindVars );
 
 			if( $result && $result->numRows() ) {
 				$this->mInfo = $result->fields;
 				$this->mContentId = $result->fields['content_id'];
-				$this->mEventsId = $result->fields['events_id'];
+				$this->mNlpgId = $result->fields['nlpg_id'];
 
 				$this->mInfo['creator'] =( isset( $result->fields['creator_real_name'] )? $result->fields['creator_real_name'] : $result->fields['creator_user'] );
 				$this->mInfo['editor'] =( isset( $result->fields['modifier_real_name'] )? $result->fields['modifier_real_name'] : $result->fields['modifier_user'] );
@@ -118,7 +124,7 @@ class BitNlpg extends LibertyContent {
 		// verify should call the super class verify at all levels.
 		LibertyContent::verify($pParamHash);
 
-		$this->mInfo = array_merge($pParamHash['events_store'],$pParamHash['content_store'],$pParamHash['events_prefs_store']);
+		$this->mInfo = array_merge($pParamHash['nlpg_store'],$pParamHash['content_store']);
 		$this->mInfo['data'] = $pParamHash['edit'];
 		$this->mInfo['parsed'] = $this->parseData($pParamHash['edit'], empty($pParamHash['format_guid']) ? $pParamHash['format_guid'] : $gBitSystem->getConfig('default_format'));
 
@@ -131,7 +137,7 @@ class BitNlpg extends LibertyContent {
 	/**
 	* Any method named Store inherently implies data will be written to the database
 	* @param pParamHash be sure to pass by reference in case we need to make modifcations to the hash
-	* This is the ONLY method that should be called in order to store( create or update )an events!
+	* This is the ONLY method that should be called in order to store ( create or update ) an nlpg record!
 	* It is very smart and will figure out what to do for you. It should be considered a black box.
 	*
 	* @param array pParams hash of values that will be used to store the page
@@ -142,33 +148,23 @@ class BitNlpg extends LibertyContent {
 	**/
 	function store( &$pParamHash ) {
 		if( $this->verify( $pParamHash )&& LibertyContent::store( $pParamHash ) ) {
-			$table = BIT_DB_PREFIX."events";
-
-			$prefChecks = array('show_start_time', 'show_end_time');
-			foreach ($prefChecks as $var) {
-				if (isset($pParamHash['events_prefs_store'][$var])) {
-					$this->storePreference($var, $pParamHash['events_prefs_store'][$var]);
-				}
-				else {
-					$this->storePreference($var);
-				}
-			}
+			$table = BIT_DB_PREFIX."nlpg";
 
 			$this->mDb->StartTrans();
 
-			if( $this->mEventsId ) {
-				$result = $this->mDb->associateUpdate( $table, $pParamHash['events_store'], array( 'events_id' => $pParamHash['events_id'] ) );
+			if( $this->mNlpgId ) {
+				$result = $this->mDb->associateUpdate( $table, $pParamHash['nlpg_store'], array( 'nlpg_id' => $pParamHash['nlpg_id'] ) );
 			} else {
-				$pParamHash['events_store']['content_id'] = $pParamHash['content_id'];
-				if( @$this->verifyId( $pParamHash['events_id'] ) ) {
-					// if pParamHash['events_id'] is set, some is requesting a particular events_id. Use with caution!
-					$pParamHash['events_store']['events_id'] = $pParamHash['events_id'];
+				$pParamHash['nlpg_store']['content_id'] = $pParamHash['content_id'];
+				if( @$this->verifyId( $pParamHash['nlpg_id'] ) ) {
+					// if pParamHash['nlpg_id'] is set, some is requesting a particular nlpg_id. Use with caution!
+					$pParamHash['nlpg_store']['nlpg_id'] = $pParamHash['nlpg_id'];
 				} else {
-					$pParamHash['events_store']['events_id'] = $this->mDb->GenID( 'events_events_id_seq' );
+					$pParamHash['nlpg_store']['nlpg_id'] = $this->mDb->GenID( 'nlpg_id_seq' );
 				}
-				$this->mEventsId = $pParamHash['events_store']['events_id'];
+				$this->mNlpgId = $pParamHash['nlpg_store']['nlpg_id'];
 
-				$result = $this->mDb->associateInsert( $table, $pParamHash['events_store'] );
+				$result = $this->mDb->associateInsert( $table, $pParamHash['nlpg_store'] );
 			}
 			$this->mDb->CompleteTrans();
 			$this->load();
@@ -190,8 +186,8 @@ class BitNlpg extends LibertyContent {
 	**/
 	function verify( &$pParamHash ) {
 		global $gBitUser, $gBitSystem;
-		// make sure we're all loaded up of we have a mEventsId
-		if( $this->verifyId( $this->mEventsId )/* && empty( $this->mInfo )*/ ) {
+		// make sure we're all loaded up of we have a mNlpgId
+		if( $this->verifyId( $this->mNlpgId )/* && empty( $this->mInfo )*/ ) {
 			$this->load();
 		}
 
@@ -205,114 +201,21 @@ class BitNlpg extends LibertyContent {
 		}
 
 		if( @$this->verifyId( $pParamHash['content_id'] ) ) {
-			$pParamHash['events_store']['content_id'] = $pParamHash['content_id'];
+			$pParamHash['nlpg_store']['content_id'] = $pParamHash['content_id'];
 		}
 
 		if( !empty( $pParamHash['cost'] ) ) {
-		    $pParamHash['events_store']['cost'] = substr( trim($pParamHash['cost']), 0, 160 );
-		}
-
-		$prefChecks = array('show_start_time', 'show_end_time');
-		foreach ($prefChecks as $var) {
-			if (isset($pParamHash[$var])) {
-				$pParamHash['events_prefs_store'][$var] = $pParamHash[$var];
-			}
-		}
-
-		if ( !empty($pParamHash['frequency'] ) ) {
-			$pParamHash['events_store']['frequency'] = $pParamHash['frequency'];
-		}
-		else {
-			$pParamHash['events_store']['frequency'] = 0;
-		}
-
-		if( !empty( $pParamHash['start_date']) && !empty($pParamHash['start_time']) ) {
-			if (isset($pParamHash['start_time']['Meridian'])) {
-				$pParamHash['event_time'] =
-					$this->mDate->gmmktime(($pParamHash['start_time']['Meridian'] == 'pm' ?
-							      $pParamHash['start_time']['Hour'] + 12 :
-							      $pParamHash['start_time']['Hour']),
-							     $pParamHash['start_time']['Minute'],
-							     isset($pParamHash['start_time']['Second']) ?
-							     $pParamHash['start_time']['Second'] : 0,
-							     $pParamHash['start_date']['Month'],
-							     $pParamHash['start_date']['Day'],
-							     $pParamHash['start_date']['Year']
-							     );
-			}
-			else {
-				$pParamHash['event_time'] =
-					$this->mDate->gmmktime($pParamHash['start_time']['Hour'],
-							     $pParamHash['start_time']['Minute'],
-							     isset($pParamHash['start_time']['Second']) ?
-							     $pParamHash['start_time']['Second'] : 0,
-							     $pParamHash['start_date']['Month'],
-							     $pParamHash['start_date']['Day'],
-							     $pParamHash['start_date']['Year']
-							     );
-			}
-		}
-
-		if( !empty($pParamHash['end_time']) && !empty($pParamHash['event_time']) ) {
-			if (empty($pParamHash['start_date'])) {
-				$pParamHash['start_date']['Month'] = $this->mDate->strftime("%m", $pParamHash['event_time'], true);
-				$pParamHash['start_date']['Day'] = $this->mDate->strftime("%d", $pParamHash['event_time'], true);
-				$pParamHash['start_date']['Year'] = $this->mDate->strftime("%Y", $pParamHash['event_time'], true);
-			}
-			if ((!isset($pParamHash['end_time']['Meridian']) ||
-			     ($pParamHash['end_time']['Meridian'] == 'am' ||
-			      $pParamHash['end_time']['Meridian'] == 'pm')) &&
-			    (isset($pParamHash['end_time']['Hour']) &&
-			     is_numeric($pParamHash['end_time']['Hour'])) &&
-			    (!isset($pParamHash['end_time']['Minute']) ||
-			     is_numeric($pParamHash['end_time']['Minute']) &&
-			     (!isset($pParamHash['end_time']['Second']) ||
-			      is_numeric($pParamHash['end_time']['Second'])))) {
-
-				if (isset($pParamHash['end_time']['Meridian'])) {
-					$pParamHash['events_store']['end_time'] =
-					  $this->mDate->gmmktime(($pParamHash['end_time']['Meridian'] == 'pm' ?
-								      $pParamHash['end_time']['Hour'] + 12 :
-								      $pParamHash['end_time']['Hour']),
-								     $pParamHash['end_time']['Minute'],
-								     isset($pParamHash['end_time']['Second']) ?
-								     $pParamHash['end_time']['Second'] : 0,
-								     $pParamHash['start_date']['Month'],
-								     $pParamHash['start_date']['Day'],
-								     $pParamHash['start_date']['Year']
-								     );
-				}
-				else {
-					$pParamHash['events_store']['end_time'] =
-					  $this->mDate->gmmktime($pParamHash['end_time']['Hour'],
-								     $pParamHash['end_time']['Minute'],
-								     isset($pParamHash['end_time']['Second']) ?
-								     $pParamHash['end_time']['Second'] : 0,
-								     $pParamHash['start_date']['Month'],
-								     $pParamHash['start_date']['Day'],
-								     $pParamHash['start_date']['Year']
-								     );
-				}
-				$pParamHash['events_store']['end_time'] = $this->mDate->getUTCFromDisplayDate($pParamHash['events_store']['end_time']);
-			}
-		}
-
-		if( !empty( $pParamHash['event_time'] ) ) {
-			$pParamHash['event_time'] = $this->mDate->getUTCFromDisplayDate( $pParamHash['event_time']);
-		} else if ( !empty( $this->mInfo['event_time'] ) ) {
-			$pParamHash['event_time'] = $this->mDate->getUTCFromDisplayDate( $this->mInfo['event_time']);
-		} else {
-			$pParamHash['event_time'] = $gBitSystem->getUTCTime();
+		    $pParamHash['nlpg_store']['cost'] = substr( trim($pParamHash['cost']), 0, 160 );
 		}
 
 		// check some lengths, if too long, then truncate
 		if( $this->isValid() && !empty( $this->mInfo['description'] ) && empty( $pParamHash['description'] ) ) {
 			// someone has deleted the description, we need to null it out
-			$pParamHash['events_store']['description'] = '';
+			$pParamHash['nlpg_store']['description'] = '';
 		} else if( empty( $pParamHash['description'] ) ) {
 			unset( $pParamHash['description'] );
 		} else {
-			$pParamHash['events_store']['description'] = substr( $pParamHash['description'], 0, 200 );
+			$pParamHash['nlpg_store']['description'] = substr( $pParamHash['description'], 0, 200 );
 		}
 
 		if( !empty( $pParamHash['data'] ) ) {
@@ -321,7 +224,7 @@ class BitNlpg extends LibertyContent {
 
 		// check for name issues, first truncate length if too long
 		if( !empty( $pParamHash['title'] ) ) {
-			if( empty( $this->mEventsId ) ) {
+			if( empty( $this->mNlpgId ) ) {
 				if( empty( $pParamHash['title'] ) ) {
 					$this->mErrors['title'] = 'You must enter a name for this page.';
 				} else {
@@ -339,17 +242,13 @@ class BitNlpg extends LibertyContent {
 	}
 
 	/**
-	* This function removes a events entry
+	* This function removes an nlpg upload entry
 	**/
 	function expunge() {
 		$ret = FALSE;
 		if( $this->isValid() ) {
 			$this->mDb->StartTrans();
-			$query = "DELETE FROM `".BIT_DB_PREFIX."events_on` WHERE `content_id` = ?";
-			$result = $this->mDb->query( $query, array( $this->mContentId ) );
-			$query = "DELETE FROM `".BIT_DB_PREFIX."events_invites` WHERE `content_id` = ?";
-			$result = $this->mDb->query( $query, array( $this->mContentId ) );
-			$query = "DELETE FROM `".BIT_DB_PREFIX."events` WHERE `content_id` = ?";
+			$query = "DELETE FROM `".BIT_DB_PREFIX."nlpg` WHERE `content_id` = ?";
 			$result = $this->mDb->query( $query, array( $this->mContentId ) );
 			if( LibertyContent::expunge() ) {
 				$ret = TRUE;
@@ -362,7 +261,7 @@ class BitNlpg extends LibertyContent {
 	}
 
 	/**
-	* Make sure events is loaded and valid
+	* Make sure nlpg record is loaded and valid
 	**/
 	function isValid() {
 		return( $this->verifyId( $this->mContentId ) );
@@ -408,10 +307,10 @@ class BitNlpg extends LibertyContent {
 			$bindVars[] = array( $pUserId );
 		}
 
-		$query = "SELECT e.*, lc.`content_id`, lc.`title`, lc.`data`, lc.`modifier_user_id` AS `modifier_user_id`, lc.`user_id` AS`creator_user_id`,
+		$query = "SELECT n.*, lc.`content_id`, lc.`title`, lc.`data`, lc.`modifier_user_id` AS `modifier_user_id`, lc.`user_id` AS`creator_user_id`,
 			lc.`last_modified` AS `last_modified`, lc.`event_time` AS `event_time`, lc.`format_guid`, lcps.`pref_value` AS `show_start_time`, lcpe.`pref_value` AS `show_end_time`  $selectSql
 			$selectSql
-			FROM `".BIT_DB_PREFIX."events` e
+			FROM `".BIT_DB_PREFIX."nlpg` n
 			INNER JOIN `".BIT_DB_PREFIX."liberty_content` lc ON( lc.`content_id` = e.`content_id` )
 			LEFT JOIN `".BIT_DB_PREFIX."liberty_content_prefs` lcps ON (lc.`content_id` = lcps.`content_id` AND lcps.`pref_name` = 'show_start_time')
 			LEFT JOIN `".BIT_DB_PREFIX."liberty_content_prefs` lcpe ON (lc.`content_id` = lcpe.`content_id` AND lcpe.`pref_name` = 'show_end_time')
@@ -419,7 +318,7 @@ class BitNlpg extends LibertyContent {
 			WHERE lc.`content_type_guid` = ? $whereSql
 			ORDER BY ".$this->mDb->convertSortmode( $sort_mode );
 		$query_cant = "SELECT COUNT( * )
-				FROM `".BIT_DB_PREFIX."events` e
+				FROM `".BIT_DB_PREFIX."nlpg` n
 				INNER JOIN `".BIT_DB_PREFIX."liberty_content` lc ON( lc.`content_id` = e.`content_id` ) $joinSql
 				WHERE lc.`content_type_guid` = ? $whereSql";
 		$result = $this->mDb->query( $query, $bindVars, $max_records, $offset );
@@ -450,14 +349,14 @@ class BitNlpg extends LibertyContent {
 	/* Limits content status types for users who can not enter all status */
 	function getAvailableContentStatuses( $pUserMinimum=-100, $pUserMaximum=100 ) {
 		global $gBitSystem;
-		if ($gBitSystem->isFeatureActive('events_moderation')) {
+		if ($gBitSystem->isFeatureActive('nlpg_moderation')) {
 			return LibertyContent::getAvailableContentStatuses(-100,0);
 		}
 		return parent::getAvailableContentStatuses();
 	}
 
 	function getRenderFile() {
-		return EVENTS_PKG_PATH."display_events_inc.php";
+		return NLPG_PKG_PATH."display_nlpg_inc.php";
 	}
 
 	/**
@@ -669,6 +568,46 @@ class BitNlpg extends LibertyContent {
 		$result = $this->mDb->query( $query );
 	}
 
+	/**
+	 * UKPCExpunge();
+	 * Clear ukpc entries
+	 * Used before loading a new full dump
+	 */
+	function UKPCExpunge() {
+		$query = "DELETE FROM `".BIT_DB_PREFIX."nlpg_ukpc`";
+		$result = $this->mDb->query( $query );
+	}
+
+	/**
+	 * OnsLARecordLoad( $data );
+	 * Office of national statistics Local Authority csv record
+	 */
+	function UKPCRecordLoad( &$data ) {
+		$table = BIT_DB_PREFIX."nlpg_ukpc";
+
+		$pDataHash['data_store']['postcode'] = $data[0];
+		if ( $data[1] == 'terminated' ) { $pDataHash['data_store']['status'] = 't'; } else if ( $data[1] == 'live' ) { $pDataHash['data_store']['status'] = 'l'; } else { $pDataHash['data_store']['status'] = 'o'; }
+		if ( $data[1] == 'small' ) { $pDataHash['data_store']['usertype'] = 's'; } else if ( $data[1] == 'large' ) { $pDataHash['data_store']['usertype'] = 'l'; } else { $pDataHash['data_store']['usertype'] = 'o'; }
+		if ( !is_numeric($data[3]) ) { $data[3] = 0; }
+		$pDataHash['data_store']['easting'] = $data[3];
+		if ( !is_numeric($data[4]) ) { $data[4] = 0; }
+		$pDataHash['data_store']['northing'] = $data[4];
+		$pDataHash['data_store']['positional_quality_indicator'] = $data[5];
+		$pDataHash['data_store']['country'] = $data[6];
+		if ( !is_numeric($data[7]) ) { $data[7] = 0; }
+		$pDataHash['data_store']['latitude'] = $data[7];
+		if ( !is_numeric($data[8]) ) { $data[8] = 0; }
+		$pDataHash['data_store']['longitude'] = $data[8];
+		$pDataHash['data_store']['postcode_no_space'] = $data[9];
+		$pDataHash['data_store']['postcode_fixed_width_seven'] = $data[10];
+		$pDataHash['data_store']['postcode_fixed_width_eight'] = $data[11];
+		$pDataHash['data_store']['postcode_area'] = $data[12];
+		$pDataHash['data_store']['postcode_district'] = $data[13];
+		$pDataHash['data_store']['postcode_sector'] = $data[14];
+		$pDataHash['data_store']['outcode'] = $data[15];
+		$pDataHash['data_store']['incode'] = $data[16];
+		$result = $this->mDb->associateInsert( $table, $pDataHash['data_store'] );
+	}
 	/**
 	 * OnsLARecordLoad( $data );
 	 * Office of national statistics Local Authority csv record
